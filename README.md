@@ -1,5 +1,5 @@
 # DevBox
-Generates and AWS Ec2, and runs userdata.sh to set it up.
+Generates an AWS EC2, and runs userdata.sh to set it up.
 
 ## Requirements:
 - Access to DEA AWS account
