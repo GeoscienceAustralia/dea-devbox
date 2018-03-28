@@ -7,6 +7,8 @@ install.sh: bootstrap.sh proxy_setup.sh machine.env *.py *.service
 	echo '(base64 -d | tar xz) <<EOF' >> $@
 	tar cvz $@ $^ | base64 -w 120 >> $@
 	echo 'EOF' >> $@
+	echo '# You can override settings for host/github-user/email' >> $@
+	echo '# ./bootstrap.sh <host.dea.gadevs.ga> <github-user> <email>' >> $@
 	echo './bootstrap.sh' >> $@
 	chmod 755 $@
 

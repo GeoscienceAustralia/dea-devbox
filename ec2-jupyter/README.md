@@ -30,3 +30,5 @@ Ports:
 - HTTP 80
 - HTTPS 443
 - SSH 22
+
+If you don't need anything extra you can use `dea-dev-jupyterhub`.

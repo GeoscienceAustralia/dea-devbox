@@ -120,7 +120,20 @@ LC_ALL=${LC_ALL}
 LANG=${LANG}
 EOF
 
-install -D -m 644 machine.env /etc/jupyterhub/jupyterhub.conf
+source ./machine.env
+
+domain=${1:-$DOMAIN}
+admin_user=${2:-$ADMIN_USER}
+email=${3:-$EMAIL}
+
+install -m 755 -d /etc/jupyterhub/
+cat <<EOF > /etc/jupyterhub/jupyterhub.conf
+DOMAIN=${domain}
+ADMIN_USER=${admin_user}
+EMAIL=${email}
+OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
+OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
+EOF
 
 ## Set up all extra repos
 add_repos ppa:certbot/certbot ppa:nextgis/ppa
