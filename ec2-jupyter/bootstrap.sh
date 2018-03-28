@@ -112,9 +112,12 @@ install_jh_proxy() {
     systemctl start jupyterhub-proxy
 }
 
+export LC_ALL=C.UTF-8
+export LANG=C.UTF-8
+
 cat <<EOF >> /etc/environment
-LC_ALL=C.UTF-8
-LANG=C.UTF-8
+LC_ALL=${LC_ALL}
+LANG=${LANG}
 EOF
 
 install -D -m 644 machine.env /etc/jupyterhub/jupyterhub.conf
