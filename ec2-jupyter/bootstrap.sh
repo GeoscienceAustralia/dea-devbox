@@ -40,5 +40,6 @@ install_geo_libs
 install_datacube_lib
 install_datacube_db
 add_db_super_user "${admin_user}"
+add_db_super_user "ubuntu"
 
 apt-get clean
