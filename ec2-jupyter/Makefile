@@ -17,7 +17,7 @@ clean:
 
 
 lxc-clean:
-	sudo lxc stop uu || echo "Already stopped"
+	sudo lxc stop uu 2> /dev/null || echo "Already stopped"
 	sudo lxc restore uu ubuntu-clean
 	sudo lxc start uu
 

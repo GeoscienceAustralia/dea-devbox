@@ -6,6 +6,7 @@ source ./functions.sh
 source ./machine.env
 
 domain=${1:-$DOMAIN}
+domain_prefix=$(echo $domain | cut -d . -f 1)
 admin_user=${2:-$ADMIN_USER}
 email=${3:-$EMAIL}
 
@@ -25,6 +26,7 @@ ADMIN_USER=${admin_user}
 EMAIL=${email}
 OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
 OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
+OAUTH_CALLBACK_URL=${OAUTH_CALLBACK_URL}/${domain_prefix}
 EOF
 
 ## Set up all extra repos

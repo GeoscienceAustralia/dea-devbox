@@ -13,6 +13,7 @@ ADMIN_USER=<your github user name>
 EMAIL=<your email>@ga.gov.au
 OAUTH_CLIENT_ID=<this won't be needed in the future>
 OAUTH_CLIENT_SECRET=<this won't be needed in the future>
+OAUTH_CALLBACK_URL=https://8ova40okdl.execute-api.ap-southeast-2.amazonaws.com/oauth
 ```
 
 Then type `make`. This will generate `install.sh` suitable for pasting into `userdata` field of the ec2 instance.
