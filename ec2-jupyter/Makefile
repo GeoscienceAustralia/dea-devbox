@@ -4,10 +4,9 @@ all: install.sh
 install.sh: bootstrap.sh proxy_setup.sh machine.env *.py *.service
 	echo '#!/bin/sh' > $@
 	echo 'mkdir -p /tmp/install && cd /tmp/install' >> $@
-	echo -n 'echo ' >> $@
-	tar cvz $@ $^ | base64 -w 0 >> $@
-	echo '\\' >> $@
-	echo ' | base64 -d|tar xz' >> $@
+	echo '(base64 -d | tar xz) <<EOF' >> $@
+	tar cvz $@ $^ | base64 -w 120 >> $@
+	echo 'EOF' >> $@
 	echo './bootstrap.sh' >> $@
 	chmod 755 $@
 
