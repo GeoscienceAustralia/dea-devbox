@@ -36,5 +36,7 @@ install_jupyter_hub
 install_notebook
 install_geo_libs
 install_datacube_lib
+install_datacube_db
+add_db_super_user "${admin_user}"
 
 apt-get clean

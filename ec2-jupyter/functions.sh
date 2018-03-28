@@ -107,3 +107,20 @@ install_jh_proxy() {
     systemctl start update-dns
     systemctl start jupyterhub-proxy
 }
+
+install_datacube_db() {
+    local v=${1:-9.5}
+    apt-get install -y \
+            "postgresql-${v}" \
+            "postgresql-client-${v}" \
+            "postgresql-contrib-${v}"
+
+    sudo -u postgres createdb datacube
+}
+
+add_db_super_user() {
+    local user=${1:-ubuntu}
+
+    sudo -u postgres createuser --superuser "${user}"
+    sudo -u postgres createdb "${user}"
+}
