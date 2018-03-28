@@ -44,6 +44,24 @@ install_jupyter_hub() {
     systemctl start jupyterhub
 }
 
+install_notebook() {
+    # notebook dependencies (download as pdf for example)
+    apt-get install -y --no-install-recommends \
+            vim \
+            lmodern \
+            texlive-fonts-extra \
+            texlive-fonts-recommended \
+            texlive-generic-recommended \
+            texlive-latex-base \
+            texlive-latex-extra \
+            texlive-xetex \
+            pandoc \
+            libav-tools \
+            unzip
+
+    pip3 install --no-cache notebook
+}
+
 ## GDAL
 install_geo_libs() {
     local rasterio_version=1.0a12
@@ -64,7 +82,17 @@ install_geo_libs() {
 
     pip3 install --no-cache GDAL fiona shapely
     pip3 install --no-cache --upgrade cython
-    pip3 install --no-cache "git+https://github.com/mapbox/rasterio.git@{rasterio_version}"
+    pip3 install --no-cache "git+https://github.com/mapbox/rasterio.git@${rasterio_version}"
+}
+
+install_datacube_lib() {
+    local DATACUBE_VERSION=develop
+
+    # deal with psycopg2 binary warning
+    pip3 install --no-cache --no-binary :all: psycopg2
+
+    pip3 install --no-cache \
+         'git+https://github.com/opendatacube/datacube-core.git@'"${DATACUBE_VERSION}"'#egg=datacube[s3,test]'
 }
 
 install_jh_proxy() {
@@ -75,7 +103,7 @@ install_jh_proxy() {
 
     install -m 644 update-dns.service /etc/systemd/system/update-dns.service
     install -m 644 jupyterhub-proxy.service /etc/systemd/system/jupyterhub-proxy.service
-    install -m 755 proxy_setup.sh /etc/jupyterhub/proxy_setup.sh
+    install -D -m 755 proxy_setup.sh /etc/jupyterhub/proxy_setup.sh
 
     systemctl enable update-dns
     systemctl enable jupyterhub-proxy
@@ -95,6 +123,11 @@ install -D -m 644 machine.env /etc/jupyterhub/jupyterhub.conf
 add_repos ppa:certbot/certbot ppa:nextgis/ppa
 
 install_common_py
-install_jupyter_hub
 install_jh_proxy
+install_jupyter_hub
+install_notebook
+install_geo_libs
+install_datacube_lib
 
+
+apt-get clean
