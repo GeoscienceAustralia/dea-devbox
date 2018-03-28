@@ -1,0 +1,14 @@
+[Unit]
+Description=Update DNS record on boot
+After=network.target
+
+[Service]
+Type=simple
+User=nobody
+EnvironmentFile=-/etc/jupyterhub/jupyterhub.conf
+EnvironmentFile=/etc/environment
+ExecStart=/usr/local/bin/jhub-vhost dns --route53 "${DOMAIN}"
+Restart=no
+
+[Install]
+WantedBy=multi-user.target

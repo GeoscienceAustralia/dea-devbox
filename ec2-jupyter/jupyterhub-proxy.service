@@ -1,0 +1,15 @@
+[Unit]
+Description=Configure nginx to proxy to jupyterhub
+Requisite=nginx.service
+After=update-dns.service
+
+[Service]
+Type=simple
+User=root
+EnvironmentFile=-/etc/jupyterhub/jupyterhub.conf
+EnvironmentFile=/etc/environment
+ExecStart=/etc/jupyterhub/proxy_setup.sh
+Restart=no
+
+[Install]
+WantedBy=multi-user.target

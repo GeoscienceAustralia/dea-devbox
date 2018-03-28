@@ -1,0 +1,14 @@
+[Unit]
+Description=Run jupyterhub as root
+After=network.target
+
+[Service]
+Type=simple
+User=root
+EnvironmentFile=-/etc/jupyterhub/jupyterhub.conf
+EnvironmentFile=/etc/environment
+ExecStart=/usr/local/bin/jupyterhub --config /etc/jupyterhub/jupyterhub_config.py
+Restart=no
+
+[Install]
+WantedBy=multi-user.target
