@@ -3,9 +3,8 @@ all: install.sh
 
 install.sh: bootstrap.sh functions.sh proxy_setup.sh machine.env *.py *.service
 	echo '#!/bin/sh' > $@
-	echo 'mkdir -p /tmp/install && cd /tmp/install' >> $@
-	echo '(base64 -d | tar xz) <<EOF' >> $@
-	tar cvz $^ | base64 -w 120 >> $@
+	echo 'mkdir -p /tmp/install && cd /tmp/install && (base64 -d | tar xz) <<EOF' >> $@
+	tar cvz $^ | base64 -w 150 >> $@
 	echo 'EOF' >> $@
 	echo '# You can override settings for host/github-user/email' >> $@
 	echo '# ./bootstrap.sh <host.dea.gadevs.ga> <github-user> <email>' >> $@
