@@ -15,6 +15,10 @@ install.sh: bootstrap.sh functions.sh proxy_setup.sh machine.env *.py *.service
 clean:
 	rm -f install.sh
 
+local-test:
+	sudo systemctl stop jupyterhub
+	sudo cp jupyterhub_config.py /etc/jupyterhub/jupyterhub_config.py
+	sudo systemctl start jupyterhub
 
 lxc-clean:
 	sudo lxc stop uu 2> /dev/null || echo "Already stopped"
@@ -28,4 +32,4 @@ lxc-files: install.sh
 	sudo lxc file push install.sh uu/root/
 
 
-.PHONY: all tar clean lxc-clean lxc-files lxc-start lxc-run
+.PHONY: all tar clean lxc-clean lxc-files lxc-start lxc-run local-test
