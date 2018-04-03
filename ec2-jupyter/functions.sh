@@ -27,6 +27,12 @@ install_common_py() {
     pip3 install --no-cache --upgrade dateutils
 }
 
+install_dev_tools() {
+    apt-get install -y --no-install-recommends \
+            tig \
+            htop
+}
+
 install_jupyter_hub() {
     pip3 install --no-cache \
          jupyterhub=='0.8.*' \

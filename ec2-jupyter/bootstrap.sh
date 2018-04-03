@@ -25,6 +25,7 @@ install_notebook
 install_geo_libs
 install_datacube_lib
 install_datacube_db
+install_dev_tools
 add_db_super_user "ubuntu"
 
 apt-get clean
