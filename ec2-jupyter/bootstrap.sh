@@ -29,3 +29,6 @@ install_dev_tools
 add_db_super_user "ubuntu"
 
 apt-get clean
+
+install -m 644 dea-init.service /etc/systemd/system/dea-init.service
+systemctl enable dea-init.service

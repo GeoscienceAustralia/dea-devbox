@@ -117,11 +117,8 @@ install_jh_proxy() {
 
     [ "$SKIP_LAUNCH" ] && return 0
 
-    systemctl enable update-dns
-    systemctl enable jupyterhub-proxy
-
-    systemctl start update-dns
-    systemctl start jupyterhub-proxy
+    systemctl enable update-dns jupyterhub-proxy
+    systemctl start update-dns jupyterhub-proxy
 }
 
 install_datacube_db() {
@@ -150,6 +147,10 @@ gen_config() {
                EMAIL='ssm:///dev/jupyterhub/email')"
     eval "$ee"
 
+    for x in "${DOMAIN}" "${ADMIN_USER}" "${EMAIL}"; do
+        [ -z "$x" ] && return 1
+    done
+
     has_dot "${DOMAIN}" || DOMAIN="${DOMAIN}.dea.gadevs.ga"
     domain_prefix=$(echo "${DOMAIN}" | cut -d . -f 1)
 
@@ -163,4 +164,23 @@ ADMIN_USER=${ADMIN_USER}
 EMAIL=${EMAIL}
 
 EOF
+
+    return 0
+}
+
+init_instance() {
+    [ -f /etc/jupyterhub/jupyterhub.conf ] && echo "Already configured" && return 0
+
+    if gen_config > /tmp/jupyterhub.conf ; then
+        mv /tmp/jupyterhub.conf /etc/jupyterhub/jupyterhub.conf
+        systemctl enable update-dns.service jupyterhub.service jupyterhub-proxy.service
+        systemctl start update-dns.service jupyterhub.service jupyterhub-proxy.service
+    else
+        echo "Failed to generate config"
+        return 1
+    fi
+}
+
+revoke_all_certs() {
+    find /etc/letsencrypt/live/ -name fullchain.pem | xargs -l1 certbot -n revoke --cert-path
 }

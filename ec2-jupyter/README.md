@@ -5,18 +5,7 @@ This generates script for `userdata` section that sets up dev box from base ubun
 
 ## How to run
 
-First create file `machine.env`
-
-```
-DOMAIN=<pick machine prefix>.dea.gadevs.ga
-ADMIN_USER=<your github user name>
-EMAIL=<your email>@ga.gov.au
-OAUTH_CLIENT_ID=ssm:///dev/jupyterhub/oauth.client.id
-OAUTH_CLIENT_SECRET=ssm:///dev/jupyterhub/oauth.client.secret
-OAUTH_CALLBACK_URL=ssm:///dev/jupyterhub/oauth.callback.url
-```
-
-Then type `make`. This will generate `install.sh` suitable for pasting into `userdata` field of the ec2 instance.
+Then type `make`. This will generate `install.sh` suitable for pasting into `userdata` field of the ec2 instance that will create base for AMI.
 
 ## EC2 Instance setup
 

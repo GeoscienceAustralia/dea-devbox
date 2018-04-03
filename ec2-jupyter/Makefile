@@ -1,7 +1,7 @@
 all: install.sh
 
 
-install.sh: bootstrap.sh functions.sh proxy_setup.sh *.py *.service
+install.sh: bootstrap.sh functions.sh dea-init.sh proxy_setup.sh *.py *.service
 	echo '#!/bin/sh' > $@
 	echo 'mkdir -p /opt/dea && cd /opt/dea && (base64 -d | tar xz) <<EOF' >> $@
 	tar cvz $^ | base64 -w 150 >> $@

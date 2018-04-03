@@ -1,0 +1,13 @@
+[Unit]
+Description=Generate config from tags
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/dea
+ExecStart=/opt/dea/dea-init.sh
+Restart=no
+
+[Install]
+WantedBy=multi-user.target
