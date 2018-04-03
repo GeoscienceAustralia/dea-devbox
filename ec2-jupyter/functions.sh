@@ -142,16 +142,16 @@ add_db_super_user() {
 }
 
 gen_config() {
-    local ec2env=$(which ec2env.py || echo $(pwd)/ec2env.py)
+    local ec2env="$(which ec2env.py || echo $(pwd)/ec2env.py)"
 
-    ee=$($ec2env
-         DOMAIN=domain
-         ADMIN_USER=admin
-         EMAIL='ssm:///dev/jupyterhub/email')
+    local ee="$($ec2env \
+               DOMAIN=domain \
+               ADMIN_USER=admin \
+               EMAIL='ssm:///dev/jupyterhub/email')"
     eval "$ee"
 
-    has_dot $DOMAIN || DOMAIN="${DOMAIN}.dea.gadevs.ga"
-    domain_prefix=$(echo $DOMAIN | cut -d . -f 1)
+    has_dot "${DOMAIN}" || DOMAIN="${DOMAIN}.dea.gadevs.ga"
+    domain_prefix=$(echo "${DOMAIN}" | cut -d . -f 1)
 
     cat <<EOF
 OAUTH_CLIENT_ID=ssm:///dev/jupyterhub/oauth.client.id
@@ -163,5 +163,4 @@ ADMIN_USER=${ADMIN_USER}
 EMAIL=${EMAIL}
 
 EOF
-
 }
