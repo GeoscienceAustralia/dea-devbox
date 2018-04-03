@@ -4,7 +4,7 @@ import sys
 def get_boto3_session():
     import requests
     import boto3
-    region = requests.get('http://169.254.169.254/latest/meta-data/placement/availability-zone').text[:-1]
+    region = requests.get('http://169.254.169.254/latest/meta-data/hostname').text.split('.')[1]
     return boto3.Session(region_name=region)
 
 

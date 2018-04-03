@@ -1,4 +1,4 @@
-add_repos(){
+add_repos() {
     apt-get update
     apt-get install -y --no-install-recommends \
             software-properties-common
@@ -8,6 +8,11 @@ add_repos(){
     done
     apt-get update
 }
+
+has_dot () {
+    echo $1 | grep "\." > /dev/null
+}
+
 
 ## Common Python
 install_common_py() {
@@ -36,6 +41,9 @@ install_jupyter_hub() {
     install -D -m 644 jupyterhub_config.py /etc/jupyterhub/jupyterhub_config.py
     install -D -m 644 jupyterhub.service /etc/systemd/system/jupyterhub.service
     install -D -d -m 755 /var/lib/jupyterhub/
+
+    [ "$SKIP_LAUNCH" ] && return 0
+
     systemctl enable jupyterhub
     systemctl start jupyterhub
 }
@@ -60,7 +68,7 @@ install_notebook() {
 
 ## GDAL
 install_geo_libs() {
-    local rasterio_version=1.0a12
+    local rasterio_version=${1:-1.0a12}
     export CPLUS_INCLUDE_PATH=/usr/include/gdal
     export C_INCLUDE_PATH=/usr/include/gdal
 
@@ -101,6 +109,8 @@ install_jh_proxy() {
     install -m 644 jupyterhub-proxy.service /etc/systemd/system/jupyterhub-proxy.service
     install -D -m 755 proxy_setup.sh /etc/jupyterhub/proxy_setup.sh
 
+    [ "$SKIP_LAUNCH" ] && return 0
+
     systemctl enable update-dns
     systemctl enable jupyterhub-proxy
 
@@ -123,4 +133,29 @@ add_db_super_user() {
 
     sudo -u postgres createuser --superuser "${user}"
     sudo -u postgres createdb "${user}"
+}
+
+gen_config() {
+    local ec2env=$(which ec2env.py || echo $(pwd)/ec2env.py)
+
+    ee=$($ec2env
+         DOMAIN=domain
+         ADMIN_USER=admin
+         EMAIL='ssm:///dev/jupyterhub/email')
+    eval "$ee"
+
+    has_dot $DOMAIN || DOMAIN="${DOMAIN}.dea.gadevs.ga"
+    domain_prefix=$(echo $DOMAIN | cut -d . -f 1)
+
+    cat <<EOF
+OAUTH_CLIENT_ID=ssm:///dev/jupyterhub/oauth.client.id
+OAUTH_CLIENT_SECRET=ssm:///dev/jupyterhub/oauth.client.secret
+OAUTH_CALLBACK_URL=ssm:///dev/jupyterhub/oauth.callback.url
+OAUTH_CALLBACK_POSTFIX=${domain_prefix}
+DOMAIN=${DOMAIN}
+ADMIN_USER=${ADMIN_USER}
+EMAIL=${EMAIL}
+
+EOF
+
 }
