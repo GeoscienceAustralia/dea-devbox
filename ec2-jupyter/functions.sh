@@ -131,12 +131,35 @@ install_datacube_db() {
     sudo -u postgres createdb datacube
 }
 
-add_db_super_user() {
+add_db_user() {
     local user=${1:-ubuntu}
+    local role=${2}
 
-    sudo -u postgres createuser --superuser "${user}"
+    if [ "${role}" = "admin" ]; then
+        sudo -u postgres createuser --superuser "${user}"
+    else
+        sudo -u postgres createuser "${user}"
+    fi
+
+
+
     sudo -u postgres createdb "${user}"
 }
+
+new_user_hook () {
+    local user=${1}
+    local role=${2}
+    local home_dir=$(eval echo "~${user}")
+
+    echo "Running new user hook: $@"
+    add_db_user "${user}" "${role}"
+
+    cat <<EOF | sudo -u "${user}" tee "${home_dir}/.datacube.conf"
+[datacube]
+db_name: datacube
+EOF
+}
+
 
 gen_config() {
     local ec2env="$(which ec2env.py || echo $(pwd)/ec2env.py)"
@@ -162,7 +185,7 @@ OAUTH_CALLBACK_POSTFIX=${domain_prefix}
 DOMAIN=${DOMAIN}
 ADMIN_USER=${ADMIN_USER}
 EMAIL=${EMAIL}
-
+NEW_USER_HOOK=/opt/dea/dea-new-user-hook.sh
 EOF
 
     return 0

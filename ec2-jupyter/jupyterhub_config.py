@@ -37,8 +37,29 @@ def system_user_exists(username):
     return True
 
 
-def create_new_user(username, admin=False):
+def create_new_user(username, admin, logger):
     from subprocess import check_call, CalledProcessError
+    from pathlib import Path
+
+    def maybe_run_hook():
+        new_user_hook = os.environ.get('NEW_USER_HOOK', None)
+
+        if new_user_hook is None:
+            return
+        if not Path(new_user_hook).exists():
+            logger.warning("NEW_USER_HOOK is configured but doesn't exists: %s", new_user_hook)
+            return
+
+        logger.info("About to run new user hook: %s", new_user_hook)
+
+        try:
+            check_call([new_user_hook,
+                        username] +
+                       (['admin'] if admin else []))
+        except CalledProcessError:
+            return
+
+
 
     try:
         check_call(['adduser',
@@ -50,7 +71,8 @@ def create_new_user(username, admin=False):
     except CalledProcessError:
         return False
 
-    #TODO: database account set up for the user
+    maybe_run_hook()
+
     return True
 
 
@@ -61,7 +83,7 @@ def pre_spawn_hook(spawner):
     spawner.log.info('Creating system user: %s%s',
                      spawner.user.name,
                      '[admin]' if spawner.user.admin else "")
-    create_new_user(spawner.user.name, spawner.user.admin)
+    create_new_user(spawner.user.name, spawner.user.admin, spawner.log)
 
 
 params = [os.environ.get(n) for n in ['OAUTH_CLIENT_ID',
