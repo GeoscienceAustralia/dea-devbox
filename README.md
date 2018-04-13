@@ -18,6 +18,30 @@ repo.
 5. Possibly change instance type
 6. Press "Launch instance from template" button to launch
 
+Once launched, wait a few minutes for initial setup to complete, then go to 
+
+```
+https://{subdomain-you-chose}.dea.gadevs.ga
+```
+
+you should be presented with jupyter hub authentication screen. Authentication is done via GitHub.
+
+When not in use power down the machine. Once started again it will update DNS record accorodingly
+so you will be able access it at the same address. To start instance without loging into console
+you can use `aws-cli`
+
+```
+aws ec2 start-instances --instance-ids i-{your-instance-id}
+```
+
+Before destroying the instance please run the following command:
+
+```
+sudo /opt/dea/dea-destroy.sh
+```
+
+this will revoke SSL certificate before we loose access to them when disk is destroyed.
+
 
 ## Manual EC2 Instance setup
 
