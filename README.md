@@ -6,8 +6,22 @@ Scripts for building developer focused AMI for datacube development/testing.
 2. Obtains SSL from "Let's Encrypt"
 3. Runs JupyterHub instance with authentication via GitHub
 
+## Launch Template
 
-## EC2 Instance setup
+I have made a launch template `dev_jupyterhub` that uses AMI build from this
+repo.
+
+1. [Launch instance from template](https://ap-southeast-2.console.aws.amazon.com/ec2/v2/home?region=ap-southeast-2#LaunchInstanceFromTemplate:launchTemplateId=lt-00d6c986fe2cec39a)
+2. Customize tags for `domain` and `admin`
+3. Optionally customize `Name` tag
+4. Set `Key name` field to the key you use (needed for ssh access)
+5. Possibly change instance type
+6. Press "Launch instance from template" button to launch
+
+
+## Manual EC2 Instance setup
+
+If not using template.
 
 Policies:
 
@@ -27,17 +41,6 @@ Ports:
 - SSH 22
 
 If you don't need anything extra you can use security group `dea-dev-jupyterhub`.
-
-## Launch Template
-
-I have made a launch template `dev_jupyterhub` that uses AMI build from this
-repo (currently manually for now).
-
-1. Launch instance from template and select template and version
-2. Customize tags for `domain` and `admin`
-3. Optionally customize `Name` tag
-4. Possibly change instance type
-5. Press "Launch instance from template" button to launch
 
 
 ## Updating AMI
