@@ -1,7 +1,7 @@
 all: install.sh
 
 
-install.sh: bootstrap.sh functions.sh dea-init.sh proxy_setup.sh *.py *.service
+install.sh: bootstrap.sh functions.sh dea-*.sh proxy_setup.sh *.py *.service
 	echo '#!/bin/sh' > $@
 	echo 'mkdir -p /opt/dea && cd /opt/dea && (base64 -d | tar xz) <<EOF' >> $@
 	tar cvz $^ | base64 -w 150 >> $@
@@ -13,6 +13,7 @@ clean:
 	rm -f install.sh
 
 local-test:
+	sudo cp functions.sh dea-*.sh /opt/dea/
 	sudo systemctl stop jupyterhub
 	sudo cp jupyterhub_config.py /etc/jupyterhub/jupyterhub_config.py
 	sudo systemctl start jupyterhub
