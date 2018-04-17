@@ -12,11 +12,13 @@ I have made a launch template `dev_jupyterhub` that uses AMI build from this
 repo.
 
 1. [Launch instance from template](https://ap-southeast-2.console.aws.amazon.com/ec2/v2/home?region=ap-southeast-2#LaunchInstanceFromTemplate:launchTemplateId=lt-00d6c986fe2cec39a)
-2. Customize tags for `domain` and `admin`
-3. Optionally customize `Name` tag
-4. Set `Key name` field to the key you use (needed for ssh access)
-5. Possibly change instance type
-6. Press "Launch instance from template" button to launch
+2. Customize tags for
+   - `domain` set to `{subdomain-of-your-choice}.dea.gadevs.ga`
+   - `admin` set to your GitHub username
+   - `Name` descriptive name shown in the "Instances" table on AWS console (optional)
+3. Set `Key name` field to the key you use (needed for ssh access)
+4. Possibly change instance type
+5. Press "Launch instance from template" button to launch
 
 Once launched, wait a few minutes for initial setup to complete, then go to 
 
