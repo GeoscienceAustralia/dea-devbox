@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+
 def get_boto3_session():
     import requests
     import boto3
@@ -18,10 +19,10 @@ def this_instance(ec2=None):
 
 def read_ssm_params(params, ssm):
     result = ssm.get_parameters(Names=[s[len('ssm://'):] for s in params],
-                                    WithDecryption=True)
+                                WithDecryption=True)
     if len(result['InvalidParameters']) > 0:
         raise ValueError('Failed to lookup some keys: ' + ','.join(result['InvalidParameters']))
-    return {'ssm://'+x['Name']:x['Value'] for x in result['Parameters']}
+    return {'ssm://'+x['Name']: x['Value'] for x in result['Parameters']}
 
 
 if __name__ == '__main__':
@@ -32,13 +33,13 @@ if __name__ == '__main__':
     ssm = session.client('ssm')
     ec2 = session.resource('ec2')
 
-    tags = {x['Key']:x['Value'] for x in this_instance(ec2=ec2).tags}
+    tags = {x['Key']: x['Value'] for x in this_instance(ec2=ec2).tags}
 
     args = [arg.split('=') for arg in sys.argv[1:]]
-    ssm_keys = [t for e,t in args if t.startswith('ssm://')]
+    ssm_keys = [t for e, t in args if t.startswith('ssm://')]
 
     if len(ssm_keys) > 0:
         tags.update(read_ssm_params(ssm_keys, ssm=ssm))
 
     for env_name, key in args:
-        print('{}={}'.format(env_name, quote(tags.get(key,''))))
+        print('{}={}'.format(env_name, quote(tags.get(key, ''))))

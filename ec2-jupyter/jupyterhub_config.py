@@ -1,6 +1,7 @@
 import os
 import sys
 
+
 def get_boto3_session():
     import requests
     import boto3
@@ -18,13 +19,13 @@ def maybe_ssm(*args):
                                     WithDecryption=True)
         if len(result['InvalidParameters']) > 0:
             raise ValueError('Failed to lookup some keys: ' + ','.join(result['InvalidParameters']))
-        return {'ssm://'+x['Name']:x['Value'] for x in result['Parameters']}
+        return {'ssm://'+x['Name']: x['Value'] for x in result['Parameters']}
 
     ssm_params = [s for s in args if (s is not None) and s.startswith('ssm://')]
     if len(ssm_params) == 0:
         return tuple(args)
     mm = read_ssm_params(ssm_params)
-    return tuple(mm.get(s,s) for s in args)
+    return tuple(mm.get(s, s) for s in args)
 
 
 def system_user_exists(username):
@@ -58,8 +59,6 @@ def create_new_user(username, admin, logger):
                        (['admin'] if admin else []))
         except CalledProcessError:
             return
-
-
 
     try:
         check_call(['adduser',
