@@ -20,9 +20,12 @@ install_common_py() {
             git \
             curl \
             python3 \
+            python3-distutils \
+            python3-setuptools \
             python3-pip
 
     pip3 install --no-cache pip --upgrade
+    hash -r
     pip3 install --no-cache wheel setuptools
     pip3 install --no-cache --upgrade dateutils
 }
@@ -74,12 +77,13 @@ install_notebook() {
 
 ## GDAL
 install_geo_libs() {
-    local rasterio_version=${1:-1.0a12}
+    local rasterio_version=${1:-"1.0a12"}
     export CPLUS_INCLUDE_PATH=/usr/include/gdal
     export C_INCLUDE_PATH=/usr/include/gdal
 
     apt-get install -y --no-install-recommends\
             gdal-bin \
+            gdal-data \
             libgdal-dev \
             libgdal20 \
             libudunits2-0
@@ -92,6 +96,7 @@ install_geo_libs() {
 
     pip3 install --no-cache GDAL fiona shapely
     pip3 install --no-cache --upgrade cython
+    pip3 install --no-cache --upgrade boto3  # S3 for rasterio
     pip3 install --no-cache "git+https://github.com/mapbox/rasterio.git@${rasterio_version}"
 }
 
@@ -122,7 +127,7 @@ install_jh_proxy() {
 }
 
 install_datacube_db() {
-    local v=${1:-9.5}
+    local v=${1:-"9.5"}
     apt-get install -y \
             "postgresql-${v}" \
             "postgresql-client-${v}" \
@@ -132,7 +137,7 @@ install_datacube_db() {
 }
 
 add_db_user() {
-    local user=${1:-ubuntu}
+    local user=${1:-"ubuntu"}
     local role=${2}
 
     if [ "${role}" = "admin" ]; then
@@ -140,8 +145,6 @@ add_db_user() {
     else
         sudo -u postgres createuser "${user}"
     fi
-
-
 
     sudo -u postgres createdb "${user}"
 }
