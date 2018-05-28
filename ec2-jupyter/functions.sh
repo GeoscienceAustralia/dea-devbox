@@ -38,7 +38,7 @@ install_dev_tools() {
 
 install_jupyter_hub() {
     pip3 install --no-cache \
-         jupyterhub=='0.8.*' \
+         jupyterhub \
          oauthenticator \
          dockerspawner
 
@@ -69,7 +69,7 @@ install_notebook() {
             texlive-latex-extra \
             texlive-xetex \
             pandoc \
-            libav-tools \
+            ffmpeg \
             unzip
 
     pip3 install --no-cache notebook
@@ -112,9 +112,10 @@ install_datacube_lib() {
 
 install_jh_proxy() {
     ## Nginx + certbot + DNS
+    local v="v0.1"
     apt-get install -y certbot nginx
 
-    pip3 install --no-cache "git+https://github.com/Kirill888/jhub-nginx-vhost.git@4b0c4e16"'#egg=jhub-nginx-vhost[ec2]'
+    pip3 install --no-cache "https://github.com/Kirill888/jhub-nginx/archive/${v}.tar.gz#egg=jhub-nginx"'[ec2]'
 
     install -m 644 update-dns.service /etc/systemd/system/update-dns.service
     install -m 644 jupyterhub-proxy.service /etc/systemd/system/jupyterhub-proxy.service
