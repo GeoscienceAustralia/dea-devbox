@@ -128,7 +128,7 @@ install_jh_proxy() {
 }
 
 install_datacube_db() {
-    local v=${1:-"9.5"}
+    local v=${1:-"10"}
     apt-get install -y \
             "postgresql-${v}" \
             "postgresql-client-${v}" \
