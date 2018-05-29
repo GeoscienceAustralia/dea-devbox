@@ -1,10 +1,18 @@
 all: install.sh
 
+char_width := 150
+
+ifeq ($(shell uname -s), Darwin)
+  b64_flags := -b $(char_width)
+else
+  b64_flags := -w $(char_width)
+endif
+
 
 install.sh: bootstrap.sh functions.sh dea-*.sh proxy_setup.sh *.py *.service
 	echo '#!/bin/sh' > $@
 	echo 'mkdir -p /opt/dea && cd /opt/dea && (base64 -d | tar xz) <<EOF' >> $@
-	tar cvz $^ | base64 -w 150 >> $@
+	tar cv $^ | gzip -9 | base64 $(b64_flags) >> $@
 	echo 'EOF' >> $@
 	echo './bootstrap.sh' >> $@
 	chmod 755 $@

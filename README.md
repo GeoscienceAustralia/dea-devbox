@@ -75,6 +75,6 @@ For now a manual process.
 
 1. `make -C ec2-jupyter`
 2. `cat ec2-jupyter/install.sh`
-3. Launch ubuntu 16.04 instance with userdata set to the content of generated `ec2-jupyter/install.sh`
+3. Launch Ubuntu 18.04 instance with userdata set to the content of generated `ec2-jupyter/install.sh`
 4. Wait for install to finish
 5. Create snapshot and AMI from that

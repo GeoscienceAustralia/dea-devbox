@@ -24,10 +24,8 @@ install_jupyter_hub
 install_notebook
 install_geo_libs
 install_datacube_lib
-install_datacube_db
+install_db
 install_dev_tools
-
-new_user_hook ubuntu admin
 
 apt-get clean
 

@@ -127,14 +127,12 @@ install_jh_proxy() {
     systemctl start update-dns jupyterhub-proxy
 }
 
-install_datacube_db() {
+install_db() {
     local v=${1:-"10"}
     apt-get install -y \
             "postgresql-${v}" \
             "postgresql-client-${v}" \
             "postgresql-contrib-${v}"
-
-    sudo -u postgres createdb datacube
 }
 
 add_db_user() {
@@ -164,6 +162,18 @@ db_name: datacube
 EOF
 }
 
+setup_datacube_db() {
+    local dbname=${1:-"datacube"}
+    local user=${2:-"ubuntu"}
+    local role=${3:-"admin"}
+
+    if psql -lqt | grep -qw "${dbname}" ; then
+        echo "Database ${dbname} exists already"
+    else
+        sudo -u postgres createdb "${dbname}"
+        new_user_hook "${user}" "${role}"
+    fi
+}
 
 gen_config() {
     local ec2env="$(which ec2env.py || echo $(pwd)/ec2env.py)"
@@ -199,6 +209,7 @@ init_instance() {
     [ -f /etc/jupyterhub/jupyterhub.conf ] && echo "Already configured" && return 0
 
     if gen_config > /tmp/jupyterhub.conf ; then
+        setup_datacube_db datacube ubuntu admin
         mv /tmp/jupyterhub.conf /etc/jupyterhub/jupyterhub.conf
         systemctl enable update-dns.service jupyterhub.service jupyterhub-proxy.service
         systemctl start update-dns.service jupyterhub.service jupyterhub-proxy.service
