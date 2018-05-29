@@ -43,7 +43,7 @@ install_jupyter_hub() {
          dockerspawner
 
     apt-get install -y --no-install-recommends npm
-    ln -sf /usr/bin/nodejs /usr/local/bin/node
+    hash node >/dev/null 2>&1 || ln -sf /usr/bin/nodejs /usr/local/bin/node
     npm install -g configurable-http-proxy
     npm cache clean --force
 
