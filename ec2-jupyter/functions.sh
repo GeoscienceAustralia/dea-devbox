@@ -188,7 +188,7 @@ gen_config() {
         [ -z "$x" ] && return 1
     done
 
-    has_dot "${DOMAIN}" || DOMAIN="${DOMAIN}.dea.gadevs.ga"
+    has_dot "${DOMAIN}" || DOMAIN="${DOMAIN}.devbox.gadevs.ga"
     domain_prefix=$(echo "${DOMAIN}" | cut -d . -f 1)
 
     cat <<EOF

@@ -21,6 +21,6 @@ Parameter store is used to configure common instance parameters
 Per instance configuration is done via tags
 
 - `admin` GitHub username for admin user of the JupyterHub
-- `domain` Need to be set to `{your-unique-subdomain}.dea.gadevs.ga`
+- `domain` Need to be set to `{your-unique-subdomain}.devbox.gadevs.ga`
 
 Once logged in `admin` user can add more users, including with admin privileges.

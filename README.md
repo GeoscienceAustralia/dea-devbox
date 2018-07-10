@@ -2,7 +2,7 @@
 
 Scripts for building developer focused AMI for datacube development/testing.
 
-1. Updates DNS on restarts ({subdomain-of-your-choice}.dea.gadevs.ga)
+1. Updates DNS on restarts ({subdomain-of-your-choice}.devbox.gadevs.ga)
 2. Obtains SSL from "Let's Encrypt"
 3. Runs JupyterHub instance with authentication via GitHub
 
@@ -13,7 +13,7 @@ repo.
 
 1. [Launch instance from template](https://ap-southeast-2.console.aws.amazon.com/ec2/v2/home?region=ap-southeast-2#LaunchInstanceFromTemplate:launchTemplateId=lt-00d6c986fe2cec39a)
 2. Customize tags for
-   - `domain` set to `{subdomain-of-your-choice}.dea.gadevs.ga`
+   - `domain` set to `{subdomain-of-your-choice}.devbox.gadevs.ga`
    - `admin` set to your GitHub username
    - `Name` descriptive name shown in the "Instances" table on AWS console (optional)
 3. Set `Key name` field to the key you use (needed for ssh access)
@@ -23,7 +23,7 @@ repo.
 Once launched, wait a few minutes for initial setup to complete, then go to 
 
 ```
-https://{subdomain-you-chose}.dea.gadevs.ga
+https://{subdomain-you-chose}.devbox.gadevs.ga
 ```
 
 you should be presented with jupyter hub authentication screen. Authentication is done via GitHub.
@@ -51,14 +51,14 @@ If not using template.
 
 Policies:
 
-- `dns-for-dea.gadevs.ga` for updating DNS records
+- `devbox-route53` for updating DNS records
 - `AmazonEC2ReadOnlyAccess` for querying tags
 - `AmazonSSMReadOnlyAccess` for querying secrets
 
-These are part of `dev-jupyter` role, should be tuned to have smaller permission
-surface, particularly SSM.
-
 But you'll probably want S3 access as well.
+
+These are part of `dea-devbox` role, should be tuned to have smaller permission
+surface, particularly SSM.
 
 Ports:
 
@@ -66,7 +66,7 @@ Ports:
 - HTTPS 443
 - SSH 22
 
-If you don't need anything extra you can use security group `dea-dev-jupyterhub`.
+If you don't need anything extra you can use security groups `ga-ssh` and `ga-http`.
 
 
 ## Updating AMI

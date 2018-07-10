@@ -10,7 +10,7 @@ This function returns a redirect (302). A call to this lambda like this:
 
 Will produce a redirect to:
 
-`https://{subdomain}.dea.gadevs.ga/rest/of/callback`
+`https://{subdomain}.devbox.gadevs.ga/rest/of/callback`
 
 This way multiple jupyterhubs can use the same oauth app and still get callback
 delivered to them at different address.

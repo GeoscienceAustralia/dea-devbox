@@ -21,6 +21,6 @@ Will give you
 ```
 Outputs:
 
-dns = yourname.dea.gadevs.ga
+dns = yourname.devbox.gadevs.ga
 ssh_address = ubuntu@54.252.168.33
 ```

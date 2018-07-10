@@ -23,7 +23,7 @@ variable "keypair_name" {
 }
 
 variable "dns_zone" {
-  default = "dea.gadevs.ga"
+  default = "devbox.gadevs.ga"
 }
 
 # Create server
