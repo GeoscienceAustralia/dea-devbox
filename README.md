@@ -62,11 +62,11 @@ surface, particularly SSM.
 
 Ports:
 
-- HTTP 80
-- HTTPS 443
-- SSH 22
+- HTTP 80 (has to be open to all, due to Let's Encrypt use)
+- HTTPS 443 (limit to GA office)
+- SSH 22 (limit to GA office)
 
-If you don't need anything extra you can use security groups `ga-ssh` and `ga-http`.
+If you don't need anything extra you can use security groups: `public-http-only`, `ga-http` and `ga-ssh`.
 
 
 ## Updating AMI
