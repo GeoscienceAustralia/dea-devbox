@@ -8,10 +8,10 @@ Scripts for building developer focused AMI for datacube development/testing.
 
 ## Launch Template
 
-I have made a launch template `dev_jupyterhub` that uses AMI build from this
+I have made a launch template `devbox` that uses AMI build from this
 repo.
 
-1. [Launch instance from template](https://ap-southeast-2.console.aws.amazon.com/ec2/v2/home?region=ap-southeast-2#LaunchInstanceFromTemplate:launchTemplateId=lt-00d6c986fe2cec39a)
+1. [Launch instance from template](https://ap-southeast-2.console.aws.amazon.com/ec2/v2/home?region=ap-southeast-2#LaunchInstanceFromTemplate:launchTemplateId=lt-0f58ab771dd16e763)
 2. Customize tags for
    - `domain` set to `{subdomain-of-your-choice}.devbox.gadevs.ga`
    - `admin` set to your GitHub username
