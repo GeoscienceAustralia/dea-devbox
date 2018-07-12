@@ -2,7 +2,10 @@
 Tools for dea devbox setup
 """
 
+
 def get_boto3_session():
+    """ Get session with correct region
+    """
     import requests
     import boto3
     region = requests.get('http://169.254.169.254/latest/meta-data/hostname').text.split('.')[1]
@@ -10,6 +13,8 @@ def get_boto3_session():
 
 
 def this_instance(ec2=None):
+    """ Get EC2 instance for current instance
+    """
     import requests
     if ec2 is None:
         ec2 = get_boto3_session().resource('ec2')
@@ -19,9 +24,12 @@ def this_instance(ec2=None):
 
 
 def read_ssm_params(params, ssm):
+    """Build dictionary from SSM keys in the form `ssm://{key}` to value in the
+    paramater store.
+    """
     result = ssm.get_parameters(Names=[s[len('ssm://'):] for s in params],
                                 WithDecryption=True)
-    if len(result['InvalidParameters']) > 0:
+    if result['InvalidParameters']:
         raise ValueError('Failed to lookup some keys: ' + ','.join(result['InvalidParameters']))
     return {'ssm://'+x['Name']: x['Value'] for x in result['Parameters']}
 
@@ -32,7 +40,7 @@ def maybe_ssm(*args):
     """
     ssm_params = [s for s in args if (s is not None) and s.startswith('ssm://')]
 
-    if len(ssm_params) == 0:
+    if not ssm_params:
         return tuple(args)
 
     ssm = get_boto3_session().client('ssm')
@@ -41,6 +49,8 @@ def maybe_ssm(*args):
 
 
 def system_user_exists(username):
+    """ Check if username exists
+    """
     import pwd
     try:
         pwd.getpwnam(username)
@@ -48,4 +58,3 @@ def system_user_exists(username):
         return False
 
     return True
-

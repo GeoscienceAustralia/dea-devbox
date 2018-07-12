@@ -1,5 +1,6 @@
 from . import get_boto3_session, this_instance, read_ssm_params
 
+
 def main_ec2env():
     import sys
     from shlex import quote

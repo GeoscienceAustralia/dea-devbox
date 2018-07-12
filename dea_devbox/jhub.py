@@ -1,5 +1,7 @@
-from . import get_boto3_session, maybe_ssm, system_user_exists
+from . import maybe_ssm, system_user_exists
 import os
+import sys
+
 
 def create_new_user(username, admin, logger):
     from subprocess import check_call, CalledProcessError
