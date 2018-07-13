@@ -18,7 +18,6 @@ configure_nginx () {
            /usr/share/dea/nginx-proxy.conf.jinja2 /dev/null > "/run/dea/${DOMAIN}.conf"
 
     (cd /etc/nginx/conf.d && ln -sf "/run/dea/${DOMAIN}.conf")
-    nginx -t && systemctl restart nginx
 }
 
 [ -d "${CERTS_DIR}" ] || fetch_certs "${CERTS_DIR}"

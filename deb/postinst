@@ -1,4 +1,4 @@
 #!/bin/bash
 
 echo "Enabling DEA init service"
-systemctl enable dea-init.service
+systemctl enable dea-init.service dea-early-init.service
