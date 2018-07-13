@@ -181,7 +181,7 @@ OAUTH_CALLBACK_URL=ssm:///dev/jupyterhub/oauth.callback.url
 OAUTH_CALLBACK_POSTFIX=${domain_prefix}
 DOMAIN=${DOMAIN}
 ADMIN_USER=${ADMIN_USER}
-NEW_USER_HOOK=/opt/dea/dea-new-user-hook.sh
+NEW_USER_HOOK=/usr/share/dea/dea-new-user-hook.sh
 EOF
 
     return 0

@@ -3,7 +3,17 @@ Version: {{version}}
 Section: base
 Priority: optional
 Architecture: all
-Depends:
+Depends: python3,
+ python3-distutils,
+ python3-setuptools,
+ python3-pip,
+ curl, git,
+ nginx,
+ npm,
+ awscli,
+ postgresql,
+ postgresql-client,
+ postgresql-contrib
 Maintainer: Kirill Kouzoubov <kirill.kouzoubov@ga.gov.au>
 Description: Jupyterhub setup for dea devboxes
  Deals with SSL and jupyterhub launching

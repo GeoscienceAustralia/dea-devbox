@@ -1,4 +1,31 @@
 #!/bin/bash
 
+# make sure pip is new
+pip3 install --no-cache pip --upgrade
+hash -r
+pip3 install --no-cache wheel setuptools
+pip3 install --no-cache --upgrade dateutils
+
+# dea-devbox tools
+pip3 install --no-cache /usr/share/dea/wheels/*.whl
+
+# used by scripts
+pip3 install jinja2-cli
+
+# todo get rid of this one (used for DNS only)
+pip3 install --no-cache "https://github.com/Kirill888/jhub-nginx/archive/v0.1.tar.gz#egg=jhub-nginx"'[ec2]'
+
+# jupyter hub via pip
+hash node >/dev/null 2>&1 || ln -sf /usr/bin/nodejs /usr/local/bin/node
+npm install -g configurable-http-proxy
+npm cache clean --force
+install -D -d -m 755 /var/lib/jupyterhub/
+pip3 install --no-cache \
+     jupyterhub \
+     oauthenticator \
+     dockerspawner
+
+pip3 install --no-cache notebook
+
 echo "Enabling DEA init service"
 systemctl enable dea-init.service dea-early-init.service

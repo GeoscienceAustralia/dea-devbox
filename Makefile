@@ -7,6 +7,9 @@ sync:
 	mkdir -p _build/
 	rsync -av rootfs/ _build/
 
+wheels:
+	pip wheel --no-deps -w ./_build/usr/share/dea/wheels/ .
+
 deb_files: _build/DEBIAN/postinst _build/DEBIAN/control
 
 _build/DEBIAN/postinst: deb/postinst
@@ -17,12 +20,12 @@ _build/DEBIAN/control: deb/control.jinja2
 	mkdir -p _build/DEBIAN
 	jinja2 --format ini -D version=$(v) $< /dev/null > $@
 
-$(deb_file): deb_files sync
+$(deb_file): deb_files sync wheels
 	fakeroot dpkg-deb --build _build/ $@
 
 clean:
 	rm -rf _build
 
-.PHONY: all sync clean deb_files
+.PHONY: all sync clean deb_files wheels
 
 
