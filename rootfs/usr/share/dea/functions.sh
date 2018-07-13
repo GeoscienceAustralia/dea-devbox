@@ -1,3 +1,5 @@
+#!/bin/bash
+
 add_repos() {
     apt-get update
     apt-get install -y --no-install-recommends \
@@ -10,7 +12,7 @@ add_repos() {
 }
 
 has_dot () {
-    echo $1 | grep "\." > /dev/null
+    echo "${1}" | grep "\." > /dev/null
 }
 
 
@@ -135,9 +137,10 @@ add_db_user() {
 new_user_hook () {
     local user=${1}
     local role=${2}
-    local home_dir=$(eval echo "~${user}")
+    local home_dir
+    home_dir=$(eval echo "~${user}")
 
-    echo "Running new user hook: $@"
+    echo "Running new user hook: $*"
     add_db_user "${user}" "${role}"
 
     cat <<EOF | sudo -u "${user}" tee "${home_dir}/.datacube.conf"
@@ -160,9 +163,8 @@ setup_datacube_db() {
 }
 
 gen_config() {
-    local ee="$(ec2env \
-               DOMAIN=domain \
-               ADMIN_USER=admin')"
+    local ee
+    ee="$(ec2env DOMAIN=domain ADMIN_USER=admin)"
     eval "$ee"
 
     for x in "${DOMAIN}" "${ADMIN_USER}"; do
@@ -185,6 +187,31 @@ EOF
     return 0
 }
 
+dea_key () {
+    local key_file="/run/dea/key.txt"
+
+    if [ -f "${key_file}" ]; then
+        cat "${key_file}"
+        exit 0
+    fi
+
+    eval "$(ec2env KEY=ssm:///dev/devbox/key)"
+
+    mkdir -p /run/dea
+    echo "${KEY}" > "${key_file}"
+    chmod 400 "${key_file}"
+    echo "${KEY}"
+}
+
+fetch_certs () {
+    # get wild card cert from s3 bucket
+    local dir=${1:-"/run/dea/certs"}
+    mkdir -p "${dir}"
+    echo "Trying to fetch certificates from s3"
+    aws s3 cp s3://dea-devbox-config/SSL/certs.tgz.gpg - | gpg --batch --passphrase "$(dea_key)" --decrypt 2> /dev/null | (cd "${dir}" && tar xz)
+    echo "OK"
+}
+
 init_instance() {
     [ -f /etc/jupyterhub/jupyterhub.conf ] && echo "Already configured" && return 0
 
@@ -200,5 +227,5 @@ init_instance() {
 }
 
 revoke_all_certs() {
-    find /etc/letsencrypt/live/ -name fullchain.pem | xargs -l1 certbot -n revoke --cert-path
+    find /etc/letsencrypt/live/ -name fullchain.pem -print0 | xargs -0 -l1 certbot -n revoke --cert-path
 }
