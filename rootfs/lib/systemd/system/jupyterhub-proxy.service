@@ -8,7 +8,7 @@ Type=simple
 User=root
 EnvironmentFile=-/etc/jupyterhub/jupyterhub.conf
 EnvironmentFile=/etc/environment
-ExecStart=/etc/jupyterhub/proxy_setup.sh
+ExecStart=/usr/share/dea/proxy_setup.sh
 Restart=no
 
 [Install]

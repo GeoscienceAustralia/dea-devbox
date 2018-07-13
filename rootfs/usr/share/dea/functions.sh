@@ -47,14 +47,7 @@ install_jupyter_hub() {
     npm install -g configurable-http-proxy
     npm cache clean --force
 
-    install -D -m 644 jupyterhub_config.py /etc/jupyterhub/jupyterhub_config.py
-    install -D -m 644 jupyterhub.service /etc/systemd/system/jupyterhub.service
     install -D -d -m 755 /var/lib/jupyterhub/
-
-    [ "$SKIP_LAUNCH" ] && return 0
-
-    systemctl enable jupyterhub
-    systemctl start jupyterhub
 }
 
 install_notebook() {
@@ -116,15 +109,6 @@ install_jh_proxy() {
     apt-get install -y certbot nginx
 
     pip3 install --no-cache "https://github.com/Kirill888/jhub-nginx/archive/${v}.tar.gz#egg=jhub-nginx"'[ec2]'
-
-    install -m 644 update-dns.service /etc/systemd/system/update-dns.service
-    install -m 644 jupyterhub-proxy.service /etc/systemd/system/jupyterhub-proxy.service
-    install -D -m 755 proxy_setup.sh /etc/jupyterhub/proxy_setup.sh
-
-    [ "$SKIP_LAUNCH" ] && return 0
-
-    systemctl enable update-dns jupyterhub-proxy
-    systemctl start update-dns jupyterhub-proxy
 }
 
 install_db() {
@@ -176,15 +160,12 @@ setup_datacube_db() {
 }
 
 gen_config() {
-    local ec2env="$(which ec2env.py || echo $(pwd)/ec2env.py)"
-
-    local ee="$($ec2env \
+    local ee="$(ec2env \
                DOMAIN=domain \
-               ADMIN_USER=admin \
-               EMAIL='ssm:///dev/jupyterhub/email')"
+               ADMIN_USER=admin')"
     eval "$ee"
 
-    for x in "${DOMAIN}" "${ADMIN_USER}" "${EMAIL}"; do
+    for x in "${DOMAIN}" "${ADMIN_USER}"; do
         [ -z "$x" ] && return 1
     done
 
@@ -198,7 +179,6 @@ OAUTH_CALLBACK_URL=ssm:///dev/jupyterhub/oauth.callback.url
 OAUTH_CALLBACK_POSTFIX=${domain_prefix}
 DOMAIN=${DOMAIN}
 ADMIN_USER=${ADMIN_USER}
-EMAIL=${EMAIL}
 NEW_USER_HOOK=/opt/dea/dea-new-user-hook.sh
 EOF
 
