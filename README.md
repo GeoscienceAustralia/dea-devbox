@@ -3,7 +3,7 @@
 Scripts for building developer focused AMI for datacube development/testing.
 
 1. Updates DNS on restarts ({subdomain-of-your-choice}.devbox.gadevs.ga)
-2. Obtains SSL from "Let's Encrypt"
+2. Load wild-card SSL certificate from S3 (not saved to EBS)
 3. Runs JupyterHub instance with authentication via GitHub
 
 ## Launch Template
@@ -20,7 +20,7 @@ repo.
 4. Possibly change instance type
 5. Press "Launch instance from template" button to launch
 
-Once launched, wait a few minutes for initial setup to complete, then go to 
+Once launched, wait a few minutes for initial setup to complete, then go to
 
 ```
 https://{subdomain-you-chose}.devbox.gadevs.ga
@@ -36,15 +36,6 @@ you can use `aws-cli`
 aws ec2 start-instances --instance-ids i-{your-instance-id}
 ```
 
-Before destroying the instance please run the following command:
-
-```
-sudo /opt/dea/dea-destroy.sh
-```
-
-this will revoke SSL certificate before we loose access to them when disk is destroyed.
-
-
 ## Manual EC2 Instance setup
 
 If not using template.
@@ -54,27 +45,52 @@ Policies:
 - `devbox-route53` for updating DNS records
 - `AmazonEC2ReadOnlyAccess` for querying tags
 - `AmazonSSMReadOnlyAccess` for querying secrets
-
-But you'll probably want S3 access as well.
+- S3 read access to `/dea-devbox-config/SSL/certs.tgz.gpg`
 
 These are part of `dea-devbox` role, should be tuned to have smaller permission
 surface, particularly SSM.
 
 Ports:
 
-- HTTP 80 (has to be open to all, due to Let's Encrypt use)
 - HTTPS 443 (limit to GA office)
 - SSH 22 (limit to GA office)
 
-If you don't need anything extra you can use security groups: `public-http-only`, `ga-http` and `ga-ssh`.
+If you don't need anything extra you can use security groups: `ga-http` and `ga-ssh`.
 
 
 ## Updating AMI
 
-For now a manual process.
 
-1. `make -C ec2-jupyter`
-2. `cat ec2-jupyter/install.sh`
-3. Launch Ubuntu 18.04 instance with userdata set to the content of generated `ec2-jupyter/install.sh`
-4. Wait for install to finish
-5. Create snapshot and AMI from that
+TODO: update docs
+
+- Build `dea-devbox-0.1.deb` by running `make`
+- Copy it to S3
+- Launch `Ubuntu 18.04`
+- Download deb package to `/tmp`
+- Install it
+
+```
+cd /tmp/
+wget https://s3-ap-southeast-2.amazonaws.com/dea-devbox-config/deb/dea-devbox-0.1.deb
+apt-get update
+apt-get install -y /tmp/dea-devbox-0.1.deb
+```
+
+## Instance Configuration
+
+Parameter store is used to configure common instance parameters
+
+- `/dev/jupyterhub/oauth.callback.url` url for redirect lambda
+- `/dev/jupyterhub/oauth.client.id` GitHub oauth app client id
+- `/dev/jupyterhub/oauth.client.secret` GitHub aouth app secret key (encrypted)
+- `/dev/devbox/key` symmetric key used to encrypt certificates
+
+Wild-card certificates are stored in `s3://dea-devbox-config/SSL/certs.tgz.gpg`
+encrypted with the key kept in `/dev/devbox/key`.
+
+Per instance configuration is done via tags
+
+- `admin` GitHub username for admin user of the JupyterHub
+- `domain` Need to be set to `{your-unique-subdomain}.devbox.gadevs.ga`
+
+Once logged in `admin` user can add more users, including with admin privileges.
