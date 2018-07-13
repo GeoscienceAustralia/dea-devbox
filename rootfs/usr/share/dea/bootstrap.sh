@@ -2,7 +2,9 @@
 
 set -e
 
-source ./functions.sh
+DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+# shellcheck source=./functions.sh
+source "${DIR}/functions.sh"
 
 # needed for some `pip install`s
 export LC_ALL=C.UTF-8
@@ -12,8 +14,6 @@ cat <<EOF >> /etc/environment
 LC_ALL=${LC_ALL}
 LANG=${LANG}
 EOF
-
-export SKIP_LAUNCH=1
 
 ## Set up all extra repos
 add_repos ppa:certbot/certbot ppa:nextgis/ppa
