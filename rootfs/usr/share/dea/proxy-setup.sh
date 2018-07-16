@@ -23,3 +23,4 @@ configure_nginx () {
 [ -d "${CERTS_DIR}" ] || fetch_certs "${CERTS_DIR}"
 configure_nginx
 
+systemctl is-active --quiet nginx && systemctl reload nginx

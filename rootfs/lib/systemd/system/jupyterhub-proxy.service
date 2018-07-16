@@ -1,10 +1,9 @@
 [Unit]
 Description=Configure nginx to proxy to jupyterhub
 After=network.target
-Before=nginx.service
 
 [Service]
-Type=oneshot
+Type=simple
 User=root
 EnvironmentFile=-/etc/jupyterhub/jupyterhub.conf
 EnvironmentFile=/etc/environment

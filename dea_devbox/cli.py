@@ -1,10 +1,26 @@
-from . import get_boto3_session, this_instance, read_ssm_params
+import sys
+import os
+from shlex import quote
+from . import get_boto3_session, this_instance, read_ssm_params, update_dns
+
+
+def main_update_dns():
+    if len(sys.argv) > 1:
+        domain = sys.argv[1]
+    else:
+        domain = os.environ.get('DOMAIN', None)
+
+    if domain is None:
+        print('No domain supplied')
+        sys.exit(1)
+
+    r = update_dns(domain)
+    if not r:
+        print('Failed to update DNS: ' + domain)
+        sys.exit(2)
 
 
 def main_ec2env():
-    import sys
-    from shlex import quote
-
     session = get_boto3_session()
     ssm = session.client('ssm')
     ec2 = session.resource('ec2')

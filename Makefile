@@ -23,8 +23,14 @@ _build/DEBIAN/control: deb/control.jinja2
 $(deb_file): deb_files sync wheels
 	fakeroot dpkg-deb --build _build/ $@
 
+upload: $(deb_file)
+	aws s3 cp $< s3://dea-devbox-config/deb/
+
 clean:
 	rm -rf _build
+
+distclean: clean
+	rm $(deb_file)
 
 .PHONY: all sync clean deb_files wheels
 

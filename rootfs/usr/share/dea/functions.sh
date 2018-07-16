@@ -72,7 +72,7 @@ install_notebook() {
 
 ## GDAL
 install_geo_libs() {
-    local rasterio_version=${1:-"1.0a12"}
+    local rasterio_version=${1:-"1.0.0"}
     export CPLUS_INCLUDE_PATH=/usr/include/gdal
     export C_INCLUDE_PATH=/usr/include/gdal
 
