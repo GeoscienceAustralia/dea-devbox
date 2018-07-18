@@ -128,7 +128,7 @@ add_db_user() {
     if [ "${role}" = "admin" ]; then
         sudo -u postgres createuser --superuser "${user}"
     else
-        sudo -u postgres createuser "${user}"
+        sudo -u postgres createuser --role agdc_user "${user}"
     fi
 
     sudo -u postgres createdb "${user}"
