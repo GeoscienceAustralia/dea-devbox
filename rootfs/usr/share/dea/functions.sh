@@ -1,7 +1,6 @@
 #!/bin/bash
 
 add_repos() {
-
     if ! hash add-apt-repository 2> /dev/null;
     then
         apt-get update
@@ -19,43 +18,14 @@ has_dot () {
     echo "${1}" | grep "\." > /dev/null
 }
 
-## Common Python
-install_common_py() {
-    apt-get install -y --no-install-recommends \
-            git \
-            curl \
-            python3 \
-            python3-distutils \
-            python3-setuptools \
-            python3-pip
-
-    pip3 install --no-cache pip --upgrade
-    hash -r
-    pip3 install --no-cache wheel setuptools
-    pip3 install --no-cache --upgrade dateutils
-}
-
 install_dev_tools() {
     apt-get install -y --no-install-recommends \
+            silversearcher-ag \
             tig \
             htop
 }
 
-install_jupyter_hub() {
-    pip3 install --no-cache \
-         jupyterhub \
-         oauthenticator \
-         dockerspawner
-
-    apt-get install -y --no-install-recommends npm
-    hash node >/dev/null 2>&1 || ln -sf /usr/bin/nodejs /usr/local/bin/node
-    npm install -g configurable-http-proxy
-    npm cache clean --force
-
-    install -D -d -m 755 /var/lib/jupyterhub/
-}
-
-install_notebook() {
+install_notebook_extras() {
     # notebook dependencies (download as pdf for example)
     apt-get install -y --no-install-recommends \
             vim \
@@ -69,8 +39,6 @@ install_notebook() {
             pandoc \
             ffmpeg \
             unzip
-
-    pip3 install --no-cache notebook
 }
 
 ## GDAL
@@ -112,22 +80,6 @@ install_datacube_lib() {
 
     pip3 install --no-cache \
          'git+https://github.com/opendatacube/datacube-core.git@'"${DATACUBE_VERSION}"'#egg=datacube[s3,test]'
-}
-
-install_jh_proxy() {
-    ## Nginx + certbot + DNS
-    local v="v0.1"
-    apt-get install -y certbot nginx
-
-    pip3 install --no-cache "https://github.com/Kirill888/jhub-nginx/archive/${v}.tar.gz#egg=jhub-nginx"'[ec2]'
-}
-
-install_db() {
-    local v=${1:-"10"}
-    apt-get install -y \
-            "postgresql-${v}" \
-            "postgresql-client-${v}" \
-            "postgresql-contrib-${v}"
 }
 
 add_db_user() {
@@ -233,8 +185,4 @@ init_instance() {
         echo "Failed to generate config"
         return 1
     fi
-}
-
-revoke_all_certs() {
-    find /etc/letsencrypt/live/ -name fullchain.pem -print0 | xargs -0 -l1 certbot -n revoke --cert-path
 }
