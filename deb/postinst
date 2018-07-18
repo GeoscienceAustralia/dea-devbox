@@ -24,5 +24,7 @@ pip3 install --no-cache \
 
 pip3 install --no-cache notebook
 
+ln -sf /usr/share/dea/dea-install-datacube.sh /usr/local/bin/dea-install-datacube
+
 echo "Enabling DEA init service"
 systemctl enable dea-init.service dea-early-init.service

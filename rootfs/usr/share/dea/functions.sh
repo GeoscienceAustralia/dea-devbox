@@ -1,9 +1,13 @@
 #!/bin/bash
 
 add_repos() {
-    apt-get update
-    apt-get install -y --no-install-recommends \
-            software-properties-common
+
+    if ! hash add-apt-repository 2> /dev/null;
+    then
+        apt-get update
+        apt-get install -y --no-install-recommends \
+                software-properties-common
+    fi
 
     for repo in "$@"; do
         add-apt-repository -y "$repo"
@@ -14,7 +18,6 @@ add_repos() {
 has_dot () {
     echo "${1}" | grep "\." > /dev/null
 }
-
 
 ## Common Python
 install_common_py() {
@@ -73,14 +76,17 @@ install_notebook() {
 ## GDAL
 install_geo_libs() {
     local rasterio_version=${1:-"1.0.0"}
+    local gdal_version=${2:-"2.3.1"}
     export CPLUS_INCLUDE_PATH=/usr/include/gdal
     export C_INCLUDE_PATH=/usr/include/gdal
 
+    local v="${gdal_version}"'+*'
+
     apt-get install -y --no-install-recommends\
-            gdal-bin \
-            gdal-data \
-            libgdal-dev \
-            libgdal20 \
+            gdal-bin="${v}" \
+            gdal-data="${v}" \
+            libgdal-dev="${v}" \
+            libgdal20="${v}" \
             libudunits2-0
 
     apt-get install -y --no-install-recommends\
@@ -89,14 +95,17 @@ install_geo_libs() {
             python3-numpy \
             python3-matplotlib
 
-    pip3 install --no-cache GDAL fiona shapely
     pip3 install --no-cache --upgrade cython
+
+    pip3 install --no-cache --no-binary GDAL GDAL
+    pip3 install --no-cache --no-binary fiona fiona
+    pip3 install --no-cache --no-binary shapely shapely
     pip3 install --no-cache --upgrade boto3  # S3 for rasterio
-    pip3 install --no-cache "git+https://github.com/mapbox/rasterio.git@${rasterio_version}"
+    pip3 install --no-cache --no-binary rasterio "git+https://github.com/mapbox/rasterio.git@${rasterio_version}"
 }
 
 install_datacube_lib() {
-    local DATACUBE_VERSION=develop
+    local DATACUBE_VERSION=${1:-"develop"}
 
     # deal with psycopg2 binary warning
     pip3 install --no-cache --no-binary :all: psycopg2
