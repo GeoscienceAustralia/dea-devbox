@@ -24,7 +24,7 @@ $(deb_file): deb_files sync wheels
 	fakeroot dpkg-deb --build _build/ $@
 
 upload: $(deb_file)
-	aws s3 cp $< s3://dea-devbox-config/deb/
+	deb-s3 upload -c bionic --s3-region ap-southeast-2 --bucket dea-devbox-apt $<
 
 clean:
 	rm -rf _build
@@ -32,6 +32,6 @@ clean:
 distclean: clean
 	rm $(deb_file)
 
-.PHONY: all sync clean deb_files wheels
+.PHONY: all sync clean distclean upload deb_files wheels
 
 
