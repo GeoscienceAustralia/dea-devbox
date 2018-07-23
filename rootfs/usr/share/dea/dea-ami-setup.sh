@@ -9,6 +9,3 @@ source "${DIR}/functions.sh"
 install_notebook_extras
 install_dev_tools
 dea-install-datacube
-
-ln -fs /usr/share/zoneinfo/Australia/Canberra /etc/localtime
-dpkg-reconfigure --frontend noninteractive tzdata
