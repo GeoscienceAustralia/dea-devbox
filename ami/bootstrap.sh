@@ -7,7 +7,7 @@ export DEBCONF_NONINTERACTIVE_SEEN=true
 
 cat <<EOF > /tmp/dea.preseed
 tzdata tzdata/Areas select Australia
-tzdata tzdata/Zones/Australia select Canberra
+tzdata tzdata/Zones/Australia select Sydney
 locales locales/locales_to_be_generated multiselect     en_US.UTF-8 en_AU.UTF-8 UTF-8
 locales locales/default_environment_locale      select  en_AU.UTF-8
 EOF
@@ -22,16 +22,17 @@ apt-get install -y awscli
 apt-get install -y python3-pip
 pip3 install --no-cache boto3
 
-aws s3 cp s3://dea-devbox-apt/apt-s3-repo-config.tgz /tmp/
-(cd /; tar xvzf /tmp/apt-s3-repo-config.tgz)
+install -D -m 755 ./s3.py /usr/lib/apt/methods/s3
 
 # Install dea-devbox
+install -D -m 644 ./dea-devbox.list /etc/apt/sources.list.d/dea-devbox.list
 apt-get update
 apt-get install -y dea-devbox
 /usr/share/dea/dea-ami-setup.sh
 
-# in case it was installed in the base image, reconfigure
-dpkg-reconfigure tzdata
+# configure time zone
+timedatectl set-timezone Australia/Sydney
+timedatectl
 
 # Cleanup
 apt-get clean

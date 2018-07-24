@@ -10,7 +10,7 @@ pip3 install --no-cache --upgrade dateutils
 pip3 install --no-cache /usr/share/dea/wheels/*.whl
 
 # used by scripts
-pip3 install jinja2-cli
+pip3 install --no-cache jinja2-cli
 
 # jupyter hub via pip
 hash node >/dev/null 2>&1 || ln -sf /usr/bin/nodejs /usr/local/bin/node

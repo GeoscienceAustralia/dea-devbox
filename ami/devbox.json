@@ -22,10 +22,18 @@
     }],
     "provisioners": [{
         "type": "file",
+        "source": "./dea-devbox.list",
+        "destination": "/tmp/"
+    }, {
+        "type": "file",
+        "source": "./3p/s3.py",
+        "destination": "/tmp/"
+    }, {
+        "type": "file",
         "source": "./bootstrap.sh",
         "destination": "/tmp/"
     }, {
         "type": "shell",
-        "inline": ["sudo -H /tmp/bootstrap.sh"]
+        "inline": ["cd /tmp && sudo -H ./bootstrap.sh"]
     }]
 }
