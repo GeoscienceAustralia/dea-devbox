@@ -26,6 +26,6 @@
         "destination": "/tmp/"
     }, {
         "type": "shell",
-        "inline": ["sudo /tmp/bootstrap.sh"]
+        "inline": ["sudo -H /tmp/bootstrap.sh"]
     }]
 }
