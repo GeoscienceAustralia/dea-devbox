@@ -15,6 +15,7 @@ EOF
 debconf-set-selections /tmp/dea.preseed
 
 apt-get update
+apt-get upgrade -y
 
 # configure s3 transport for apt
 apt-get install -y awscli
