@@ -177,10 +177,17 @@ init_instance() {
     [ -f /etc/jupyterhub/jupyterhub.conf ] && echo "Already configured" && return 0
 
     if gen_config > /tmp/jupyterhub.conf ; then
-        setup_datacube_db datacube ubuntu admin
         mv /tmp/jupyterhub.conf /etc/jupyterhub/jupyterhub.conf
         systemctl enable update-dns.service jupyterhub.service jupyterhub-proxy.service
         systemctl start update-dns.service jupyterhub.service jupyterhub-proxy.service
+
+        # dodgy sleep to give postgres a chance to start
+        for tt in 10 20 30
+        do
+            systemctl is-active postgresql || sleep "${tt}"
+        done
+
+        setup_datacube_db datacube ubuntu admin
     else
         echo "Failed to generate config"
         return 1
