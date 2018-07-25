@@ -1,4 +1,4 @@
-v := 0.1
+v := 0.1.1
 deb_file := "dea-devbox-$(v).deb"
 
 all: $(deb_file)
@@ -8,7 +8,7 @@ sync:
 	rsync -av rootfs/ _build/
 
 wheels:
-	pip wheel --no-deps -w ./_build/usr/share/dea/wheels/ .
+	pip3 wheel --no-deps -w ./_build/usr/share/dea/wheels/ .
 
 deb_files: _build/DEBIAN/postinst _build/DEBIAN/control
 
@@ -26,12 +26,15 @@ $(deb_file): deb_files sync wheels
 upload: $(deb_file)
 	deb-s3 upload -c bionic --s3-region ap-southeast-2 --bucket dea-devbox-apt $<
 
+ami:
+	cd ami && packer devbox.json
+
 clean:
 	rm -rf _build
 
 distclean: clean
-	rm $(deb_file)
+	rm -f $(deb_file)
 
-.PHONY: all sync clean distclean upload deb_files wheels
+.PHONY: all sync clean distclean upload deb_files wheels ami
 
 

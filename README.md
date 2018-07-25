@@ -58,24 +58,6 @@ Ports:
 If you don't need anything extra you can use security groups: `ga-http` and `ga-ssh`.
 
 
-## Updating AMI
-
-
-TODO: update docs
-
-- Build `dea-devbox-0.1.deb` by running `make`
-- Copy it to S3
-- Launch `Ubuntu 18.04`
-- Download deb package to `/tmp`
-- Install it
-
-```
-cd /tmp/
-wget https://s3-ap-southeast-2.amazonaws.com/dea-devbox-config/deb/dea-devbox-0.1.deb
-apt-get update
-apt-get install -y /tmp/dea-devbox-0.1.deb
-```
-
 ## Instance Configuration
 
 Parameter store is used to configure common instance parameters
@@ -93,4 +75,31 @@ Per instance configuration is done via tags
 - `admin` GitHub username for admin user of the JupyterHub
 - `domain` Need to be set to `{your-unique-subdomain}.devbox.gadevs.ga`
 
-Once logged in `admin` user can add more users, including with admin privileges.
+Once logged in, `admin` user can add more users, including with admin privileges.
+
+
+## Updating AMI
+
+- Build `dea-devbox-${version}.deb` by running `make`
+- Upload it to private apt repo `make upload`
+- Build AMI `cd ami && packer devbox.json` or `make ami`
+
+To build `.deb` you need `make dpkg-dev fakeroot pip3 jinja2-cli`, to upload to
+private apt repo we use ruby based tool: `deb-s3`.
+
+```
+apt-get install -y make fakeroot dpkg-dev python3-pip ruby git
+pip3 install jinja2-cli
+gem install deb-s3
+
+git clone https://github.com/GeoscienceAustralia/dea-devbox.git
+cd dea-devbox
+make && make upload
+```
+
+You need `dea-devbox-apt-rw` policy or general write to S3 permissions, to upload to the repo.
+
+
+## Updating SSL
+
+TODO
