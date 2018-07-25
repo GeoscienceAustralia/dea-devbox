@@ -3,6 +3,7 @@ Tools for dea devbox setup
 """
 import requests
 
+
 def get_boto3_session():
     """ Get session with correct region
     """
@@ -19,6 +20,7 @@ def this_instance(ec2=None):
 
     iid = requests.get('http://169.254.169.254/latest/meta-data/instance-id').text
     return ec2.Instance(iid)
+
 
 def public_ip():
     return requests.get('http://instance-data/latest/meta-data/public-ipv4').text
@@ -49,7 +51,7 @@ def update_dns(domain, ip=None, route53=None, ttl=300):
     update = {
         'Name': domain,
         'Type': 'A',
-        'TTL' : ttl,
+        'TTL': ttl,
         'ResourceRecords': [{'Value': ip}]
     }
     changes = {"Changes": [{"Action": "UPSERT",
