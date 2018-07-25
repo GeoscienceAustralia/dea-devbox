@@ -3,6 +3,9 @@ all: dea-build-deb
 dea-build-deb: Dockerfile.build-deb
 	docker build -t $@ --file $< .
 
+dea-ssl: Dockerfile.ssl
+	docker build -t $@ --file $< .
+
 clean:
 	docker rmi dea-build-deb
 
