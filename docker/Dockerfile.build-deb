@@ -1,0 +1,19 @@
+FROM ubuntu:18.04
+
+RUN apt-get update && \
+  apt-get install -y \
+    make \
+    fakeroot \
+    dpkg-dev \
+    rsync \
+    python3-pip \
+    ruby \
+    git && \
+  pip3 --no-cache install jinja2-cli && \
+  gem install deb-s3 && \
+  apt-get clean && \
+  echo done
+
+VOLUME /src
+WORKDIR /src
+ENTRYPOINT ["make"]

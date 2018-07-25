@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Wrapper for running make inside docker container
+#
+# Before running this do: sudo make -C docker
+
+exec docker run --rm -v $(pwd):/src dea-build-deb "$@"
