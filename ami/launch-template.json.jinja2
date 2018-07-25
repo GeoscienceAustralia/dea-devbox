@@ -1,0 +1,49 @@
+{
+    "ImageId": "{{ami_id}}",
+    "IamInstanceProfile": {
+        "Arn": "arn:aws:iam::451924316694:instance-profile/dea-devbox"
+    },
+    "InstanceType": "t2.medium",
+    "InstanceInitiatedShutdownBehavior": "stop",
+    "TagSpecifications": [
+        {
+            "ResourceType": "instance",
+            "Tags": [
+                {
+                    "Key": "Name",
+                    "Value": "-devbox"
+                },
+                {
+                    "Key": "admin",
+                    "Value": "{your-github-username}"
+                },
+                {
+                    "Key": "domain",
+                    "Value": "{customize}.devbox.gadevs.ga"
+                }
+            ]
+        },
+        {
+            "ResourceType": "volume",
+            "Tags": [
+                {
+                    "Key": "Name",
+                    "Value": "-devbox"
+                },
+                {
+                    "Key": "admin",
+                    "Value": "{your-github-username}"
+                },
+                {
+                    "Key": "domain",
+                    "Value": "{customize}.devbox.gadevs.ga"
+                }
+            ]
+        }
+    ],
+    "SecurityGroupIds": [
+        "sg-0b0c503381508c376",
+        "sg-0f5d00b60f4ce0e05",
+        "sg-08a31522f48ad81bf"
+    ]
+}
