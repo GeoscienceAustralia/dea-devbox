@@ -106,7 +106,7 @@ new_user_hook () {
 
     cat <<EOF | sudo -u "${user}" tee "${home_dir}/.datacube.conf"
 [datacube]
-db_name: datacube
+db_database: datacube
 EOF
 }
 
