@@ -55,6 +55,7 @@ install_geo_libs() {
             gdal-data="${v}" \
             libgdal-dev="${v}" \
             libgdal20="${v}" \
+            libudunits2-dev \
             libudunits2-0
 
     apt-get install -y --no-install-recommends\
