@@ -4,7 +4,7 @@ exports.redirect = (event, context, callback) => {
 
     const [_, host, ...rest] = event.path.split('/');
 
-    const redirect_location = ('https://'+host+'.devbox.gadevs.ga/' +
+    const redirect_location = ('https://'+host+'.devbox.dea.ga.gov.au/' +
                                rest.join('/') +
                                '?' + querystring.stringify(event.queryStringParameters));
 

@@ -2,7 +2,7 @@
 
 Scripts for building developer focused AMI for datacube development/testing.
 
-1. Updates DNS on restarts ({subdomain-of-your-choice}.devbox.gadevs.ga)
+1. Updates DNS on restarts ({subdomain-of-your-choice}.devbox.dea.ga.gov.au)
 2. Load wild-card SSL certificate from S3 (not saved to EBS)
 3. Runs JupyterHub instance with authentication via GitHub
 
@@ -13,7 +13,7 @@ repo.
 
 1. [Launch instance from template](https://ap-southeast-2.console.aws.amazon.com/ec2/v2/home?region=ap-southeast-2#LaunchInstanceFromTemplate:launchTemplateId=lt-0f58ab771dd16e763)
 2. Customize tags for
-   - `domain` set to `{subdomain-of-your-choice}.devbox.gadevs.ga`
+   - `domain` set to `{subdomain-of-your-choice}.devbox.dea.ga.gov.au`
    - `admin` set to your GitHub username
    - `Name` descriptive name shown in the "Instances" table on AWS console (optional)
 3. Set `Key name` field to the key you use (needed for ssh access)
@@ -23,7 +23,7 @@ repo.
 Once launched, wait a few minutes for initial setup to complete, then go to
 
 ```
-https://{subdomain-you-chose}.devbox.gadevs.ga
+https://{subdomain-you-chose}.devbox.dea.ga.gov.au
 ```
 
 you should be presented with jupyter hub authentication screen. Authentication is done via GitHub.
@@ -73,7 +73,7 @@ encrypted with the key kept in `/dev/devbox/key`.
 Per instance configuration is done via tags
 
 - `admin` GitHub username for admin user of the JupyterHub
-- `domain` Need to be set to `{your-unique-subdomain}.devbox.gadevs.ga`
+- `domain` Need to be set to `{your-unique-subdomain}.devbox.dea.ga.gov.au`
 
 Once logged in, `admin` user can add more users, including with admin privileges.
 
@@ -111,7 +111,7 @@ echo '' >> /etc/letsencrypt/cli.ini
 echo 'server = https://acme-v02.api.letsencrypt.org/directory' >> /etc/letsencrypt/cli.ini
 certbot register --agree-tos --eff-email --email "${EMAIL}"
 
-certbot certonly --dns-route53 -d '*.devbox.gadevs.ga'
+certbot certonly --dns-route53 -d '*.devbox.dea.ga.gov.au'
 ```
 
 Backing it up to S3 (encrypted):
