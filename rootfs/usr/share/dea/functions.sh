@@ -79,7 +79,7 @@ install_datacube_lib() {
     pip3 install --no-cache --no-binary :all: psycopg2
 
     pip3 install --no-cache \
-         'git+https://github.com/opendatacube/datacube-core.git@'"${DATACUBE_VERSION}"'#egg=datacube[s3,test]'
+         'git+https://github.com/opendatacube/datacube-core.git@'"${DATACUBE_VERSION}"'#egg=datacube[s3,test,performance]'
 }
 
 add_db_user() {
