@@ -27,7 +27,7 @@ upload: $(deb_file)
 	deb-s3 upload -c bionic --s3-region ap-southeast-2 --bucket dea-devbox-apt $<
 
 ami:
-	cd ami && packer devbox.json
+	cd ami && packer build devbox.json
 
 clean:
 	rm -rf _build

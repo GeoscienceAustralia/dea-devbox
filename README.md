@@ -82,7 +82,7 @@ Once logged in, `admin` user can add more users, including with admin privileges
 
 - Build `dea-devbox-${version}.deb` by running `make`
 - Upload it to private apt repo `make upload`
-- Build AMI `cd ami && packer devbox.json` or `make ami`
+- Build AMI `cd ami && packer build devbox.json` or `make ami`
 
 To build `.deb` you need `make dpkg-dev fakeroot pip3 jinja2-cli`, to upload to
 private apt repo we use ruby based tool: `deb-s3`.
