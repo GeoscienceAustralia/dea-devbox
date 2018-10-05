@@ -7,7 +7,7 @@ source "${DIR}/functions.sh"
 [ ! -f /etc/apt/sources.list.d/nextgis-ubuntu-ppa-bionic.list ] && add_repos ppa:nextgis/ppa
 
 datacube_version=${1:-"develop"}
-gdal_version=${2:-"2.3.1"}
+gdal_version=${2:-"2.3.2"}
 rio_version=${3:-"1.0.8"}
 
 cat <<EOF
