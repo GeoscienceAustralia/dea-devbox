@@ -8,7 +8,7 @@ source "${DIR}/functions.sh"
 
 datacube_version=${1:-"develop"}
 gdal_version=${2:-"2.3.1"}
-rio_version=${3:-"1.0.2"}
+rio_version=${3:-"1.0.8"}
 
 cat <<EOF
 Installing Datacube and Geo Libs:
