@@ -18,9 +18,8 @@ apt-get update
 apt-get upgrade -y
 
 # configure s3 transport for apt
-apt-get install -y awscli
 apt-get install -y python3-pip
-pip3 install --no-cache boto3
+pip3 install --no-cache boto3 awscli
 
 install -D -m 755 ./s3.py /usr/lib/apt/methods/s3
 
