@@ -3,5 +3,19 @@
 # Wrapper for running make inside docker container
 #
 # Before running this do: sudo make -C docker
+#
+# If running `make upload` on a machine outside of EC2 you need to have AWS
+# credentials passed into the docker. We use environment variables for that,
+# there is a script in docker folder that will populate the environment
+# variables from your usual aws config
+#
+# `eval $(python docker/aws_creds.py)`
 
-exec docker run --rm -v $(pwd):/src dea-build-deb "$@"
+if [[ -z "${AWS_SECRET_ACCESS_KEY}" ]]; then
+    aws_env=""
+else
+    aws_envs="-e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"
+fi
+
+
+exec docker run $aws_envs --rm -v $(pwd):/src dea-build-deb "$@"

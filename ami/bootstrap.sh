@@ -36,3 +36,13 @@ timedatectl
 # Cleanup
 apt-get clean
 
+# Check versions of important apps
+
+echo "Datacube"
+datacube --version
+echo "RIO"
+rio --version
+rio --gdal-version
+echo "GDAL"
+gdal-config --version
+
