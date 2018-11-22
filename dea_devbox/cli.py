@@ -1,7 +1,7 @@
 import sys
 import os
 from shlex import quote
-from . import get_boto3_session, this_instance, read_ssm_params, update_dns
+from . import get_boto_session, this_instance, read_ssm_params, update_dns
 
 
 def main_update_dns():
@@ -21,11 +21,11 @@ def main_update_dns():
 
 
 def main_ec2env():
-    session = get_boto3_session()
-    ssm = session.client('ssm')
-    ec2 = session.resource('ec2')
+    session = get_boto_session()
+    ssm = session.create_client('ssm')
+    ec2 = session.create_client('ec2')
 
-    tags = {x['Key']: x['Value'] for x in this_instance(ec2=ec2).tags}
+    tags = {x['Key']: x['Value'] for x in this_instance(ec2=ec2).get('Tags',[])}
 
     args = [arg.split('=') for arg in sys.argv[1:]]
     ssm_keys = [t for e, t in args if t.startswith('ssm://')]
