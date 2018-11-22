@@ -14,13 +14,20 @@ def _fetch_text(url, timeout=0.1):
                 return resp.read().decode('utf8')
             else:
                 return None
-    except (IOError, json.JSONDecodeError):
+    except IOError:
         return None
 
 
 def ec2_metadata(timeout=0.1):
     txt = _fetch_text('http://169.254.169.254/latest/dynamic/instance-identity/document', timeout)
-    return json.loads(txt) if txt else None
+
+    if txt is None:
+        return None
+
+    try:
+        return json.loads(txt)
+    except json.JSONDecodeError:
+        return None
 
 
 def public_ip():

@@ -25,7 +25,7 @@ def main_ec2env():
     ssm = session.create_client('ssm')
     ec2 = session.create_client('ec2')
 
-    tags = {x['Key']: x['Value'] for x in this_instance(ec2=ec2).get('Tags',[])}
+    tags = {x['Key']: x['Value'] for x in this_instance(ec2=ec2).get('Tags', [])}
 
     args = [arg.split('=') for arg in sys.argv[1:]]
     ssm_keys = [t for e, t in args if t.startswith('ssm://')]
