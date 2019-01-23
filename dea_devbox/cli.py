@@ -8,13 +8,16 @@ from . import (get_boto_session,
                dns_delete)
 
 
-def main_update_dns():
-    if len(sys.argv) > 1:
-        domain = sys.argv[1]
+def main_update_dns(argv=None):
+    if argv is None:
+        argv = sys.argv
+
+    if len(argv) > 1:
+        domain = argv[1]
     else:
         domain = os.environ.get('DOMAIN', None)
 
-    ip = sys.argv[2] if len(sys.argv) > 2 else None
+    ip = argv[2] if len(argv) > 2 else None
 
     if domain is None:
         print('No domain supplied')
@@ -32,7 +35,10 @@ def main_update_dns():
         sys.exit(2)
 
 
-def main_ec2env():
+def main_ec2env(argv=None):
+    if argv is None:
+        argv = sys.argv
+
     session = get_boto_session()
     ssm = session.create_client('ssm')
     ec2 = session.create_client('ec2')
@@ -44,7 +50,7 @@ def main_ec2env():
     else:
         tags = {x['Key']: x['Value'] for x in instance.get('Tags', [])}
 
-    args = [arg.split('=') for arg in sys.argv[1:]]
+    args = [arg.split('=') for arg in argv[1:]]
     ssm_keys = [t for e, t in args if t.startswith('ssm://')]
 
     if len(ssm_keys) > 0:
@@ -52,3 +58,34 @@ def main_ec2env():
 
     for env_name, key in args:
         print('{}={}'.format(env_name, quote(tags.get(key, ''))))
+
+
+def main_dispatch():
+    """ busybox-style dispatcher call either
+         - ec2env        -> main_ec2env
+         - ec2update_dns -> main_update_dns
+
+         based on the name of the executable being invoked
+    """
+    progs = dict(ec2env=main_ec2env,
+                 ec2update_dns=main_update_dns)
+
+    prog_name = sys.argv[0].split('/')[-1]
+    main = progs.get(prog_name, None)
+
+    if main is not None:
+        return main()
+
+    if len(sys.argv) < 2:
+        print("Not sure what to run: {}".format(prog_name))
+        sys.exit(1)
+
+    prog_name = sys.argv[1]
+    main = progs.get(prog_name, None)
+
+    if main is not None:
+        argv = sys.argv[1:]
+        return main(argv)
+
+    print("Not sure what to run: {}".format(prog_name))
+    sys.exit(1)

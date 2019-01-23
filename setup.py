@@ -16,8 +16,7 @@ setup(
     extras_require=dict(),
     entry_points={
         'console_scripts': [
-            'ec2env = dea_devbox.cli:main_ec2env',
-            'ec2update_dns = dea_devbox.cli:main_update_dns',
+            'dea-tool = dea_devbox.cli:main_dispatch',
         ],
     }
 )
