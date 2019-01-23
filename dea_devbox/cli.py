@@ -1,7 +1,11 @@
 import sys
 import os
 from shlex import quote
-from . import get_boto_session, this_instance, read_ssm_params, update_dns
+from . import (get_boto_session,
+               this_instance,
+               read_ssm_params,
+               dns_update,
+               dns_delete)
 
 
 def main_update_dns():
@@ -10,13 +14,21 @@ def main_update_dns():
     else:
         domain = os.environ.get('DOMAIN', None)
 
+    ip = sys.argv[2] if len(sys.argv) > 2 else None
+
     if domain is None:
         print('No domain supplied')
         sys.exit(1)
 
-    r = update_dns(domain)
+    if ip == 'delete':
+        action = 'delete'
+        r = dns_delete(domain)
+    else:
+        action = 'update'
+        r = dns_update(domain, ip)
+
     if not r:
-        print('Failed to update DNS: ' + domain)
+        print('Failed to {} DNS: {}'.format(action, domain))
         sys.exit(2)
 
 
