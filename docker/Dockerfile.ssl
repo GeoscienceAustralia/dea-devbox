@@ -1,11 +1,16 @@
 FROM ubuntu:18.04
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update && \
     apt-get install -y \
-      certbot \
-      python3-certbot-dns-route53 && \
-    apt-get clean && \
-    echo done
+      python3-pip && \
+    apt-get clean
+
+RUN pip3 install --no-cache certbot certbot-dns-route53
+
+COPY "dea_devbox-*whl" /tmp/
+RUN pip3 install /tmp/dea_devbox-*whl
 
 VOLUME /etc/letsencrypt
 ENTRYPOINT ["certbot"]

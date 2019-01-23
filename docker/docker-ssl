@@ -1,0 +1,19 @@
+#!/bin/sh
+
+get_env () {
+    aa="AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN AWS_DEFAULT_REGION"
+    ee=""
+    for a in $aa; do
+        e="${!a}"
+        if [ ! -z "${e}" ]; then
+            ee="-e $a=$e $ee"
+        fi
+    done
+    echo "$ee"
+}
+
+eval $(python ./aws_creds.py)
+mkdir -p letsencrypt
+
+exec docker run --rm -it --entrypoint bash $(get_env) \
+     -v $(pwd)/letsencrypt:/etc/letsencrypt dea-ssl
