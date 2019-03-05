@@ -43,8 +43,7 @@ install_notebook_extras() {
 
 ## GDAL
 install_geo_libs() {
-    local rasterio_version=${1:-"1.0.8"}
-    local gdal_version=${2:-"2.3.2"}
+    local gdal_version=${2:-"2.4.0"}
     export CPLUS_INCLUDE_PATH=/usr/include/gdal
     export C_INCLUDE_PATH=/usr/include/gdal
 
@@ -70,7 +69,7 @@ install_geo_libs() {
     pip3 install --no-cache --no-binary fiona fiona
     pip3 install --no-cache --no-binary shapely shapely
     pip3 install --no-cache --upgrade boto3  # S3 for rasterio
-    pip3 install --no-cache --no-binary rasterio "git+https://github.com/mapbox/rasterio.git@${rasterio_version}"
+    pip3 install --no-cache rasterio
 }
 
 install_datacube_lib() {
