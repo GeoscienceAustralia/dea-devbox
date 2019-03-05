@@ -18,10 +18,13 @@ apt-get update
 apt-get upgrade -y
 
 # configure s3 transport for apt
-apt-get install -y python3-pip
+apt-get install -y python3-pip curl
 pip3 install --no-cache boto3 awscli
 
 install -D -m 755 ./s3.py /usr/lib/apt/methods/s3
+
+# Install tools for building/running xar files
+curl --silent -L https://github.com/Kirill888/static-xarexec/releases/download/v0.1.2/xarexec-static.tgz | (cd /bin/; tar xzv)
 
 # Install dea-devbox
 install -D -m 644 ./dea-devbox.list /etc/apt/sources.list.d/dea-devbox.list
