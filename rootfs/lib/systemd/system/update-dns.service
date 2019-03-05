@@ -7,7 +7,7 @@ Type=simple
 User=nobody
 EnvironmentFile=-/etc/jupyterhub/jupyterhub.conf
 EnvironmentFile=/etc/environment
-ExecStart=/usr/local/bin/ec2update_dns "${DOMAIN}"
+ExecStart=/usr/bin/ec2update_dns "${DOMAIN}"
 Restart=no
 
 [Install]
