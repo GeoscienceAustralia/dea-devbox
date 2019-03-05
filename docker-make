@@ -9,15 +9,19 @@
 # there is a script in docker folder that will populate the environment
 # variables from your usual aws config
 #
-# `eval $(python docker/aws_creds.py)`
 
-if [[ -z "${AWS_SECRET_ACCESS_KEY}" ]]; then
-    aws_env=""
-else
-    aws_envs="-e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
--e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
--e AWS_REGION=${AWS_REGION}"
-fi
+get_env () {
+    aa="AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN AWS_DEFAULT_REGION"
+    ee=""
+    for a in $aa; do
+        e="${!a}"
+        if [ ! -z "${e}" ]; then
+            ee="-e $a=$e $ee"
+        fi
+    done
+    echo "$ee"
+}
 
+eval $(python ./docker/aws_creds.py)
 
-exec docker run $aws_envs --rm -v $(pwd):/src dea-build-deb "$@"
+exec docker run $(get_env) --rm -v $(pwd):/src dea-build-deb "$@"

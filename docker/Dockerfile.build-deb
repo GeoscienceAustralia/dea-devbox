@@ -7,12 +7,19 @@ RUN apt-get update && \
     dpkg-dev \
     rsync \
     python3-pip \
+    python3-venv \
     ruby \
+    curl \
     git && \
   pip3 --no-cache install jinja2-cli && \
   gem install deb-s3 && \
   apt-get clean && \
   echo done
+
+ENV LC_ALL C.UTF-8
+
+# install tools for building xar files
+RUN curl --silent -L https://github.com/Kirill888/static-xarexec/releases/download/v0.1.2/xarexec-static.tgz | (cd /bin/; tar xzv)
 
 VOLUME /src
 WORKDIR /src

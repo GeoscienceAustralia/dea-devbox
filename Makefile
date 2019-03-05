@@ -13,11 +13,11 @@ wheels:
 deb_files: _build/DEBIAN/postinst _build/DEBIAN/control
 
 ./_xar/bin/pip3:
-	mkdir _xar
+	mkdir -p _xar
 	python3 -m venv _xar
 
 _xar_env: ./_xar/bin/pip3
-	$< install git+https://github.com/facebookincubator/xar.git
+	$< install git+https://github.com/facebookincubator/xar.git@e80d9ede6767f4c06f478c1b3f0bb3b4cb50072d
 	$< install .
 
 _build/usr/bin/dea-tool.xar: _xar_env setup.py

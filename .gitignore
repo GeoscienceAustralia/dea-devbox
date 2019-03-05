@@ -2,6 +2,7 @@
 /*.deb
 /docker/letsencrypt
 /docker/*whl
+/_xar
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
