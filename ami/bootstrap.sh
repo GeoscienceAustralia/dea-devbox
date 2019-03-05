@@ -5,6 +5,29 @@ set -eu
 export DEBIAN_FRONTEND=noninteractive
 export DEBCONF_NONINTERACTIVE_SEEN=true
 
+cat <<EOF > /etc/apt/sources.list
+deb http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu/ bionic main restricted
+deb-src http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu/ bionic main restricted
+deb http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu/ bionic-updates main restricted
+deb-src http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu/ bionic-updates main restricted
+deb http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu/ bionic universe
+deb-src http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu/ bionic universe
+deb http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu/ bionic-updates universe
+deb-src http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu/ bionic-updates universe
+deb http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu/ bionic multiverse
+deb-src http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu/ bionic multiverse
+deb http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu/ bionic-updates multiverse
+deb-src http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu/ bionic-updates multiverse
+deb http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu/ bionic-backports main restricted universe multiverse
+deb-src http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu/ bionic-backports main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu bionic-security main restricted
+deb-src http://security.ubuntu.com/ubuntu bionic-security main restricted
+deb http://security.ubuntu.com/ubuntu bionic-security universe
+deb-src http://security.ubuntu.com/ubuntu bionic-security universe
+deb http://security.ubuntu.com/ubuntu bionic-security multiverse
+deb-src http://security.ubuntu.com/ubuntu bionic-security multiverse
+EOF
+
 cat <<EOF > /tmp/dea.preseed
 tzdata tzdata/Areas select Australia
 tzdata tzdata/Zones/Australia select Sydney
