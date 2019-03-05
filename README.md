@@ -102,44 +102,29 @@ You need `dea-devbox-apt-rw` policy or general write to S3 permissions, to uploa
 
 ## SSL certificates
 
+SSL renewal is now done with docker:
+
+```bash
+cd docker
+
+# build docker image
+make dea-ssl
+
+# get letsencrypt account data from s3
+./docker-ssl fetch
+
+# run renew (will upload to S3 when renewed)
+./docker-ssl renew
+```
+
 Initial setup was done this way:
 
 ```
-eval $(ec2env EMAIL=ssm:///dev/jupyterhub/email)
+eval $(dea-tool ec2env EMAIL=ssm:///dev/jupyterhub/email)
 apt-get install -y certbot python3-certbot-dns-route53
 echo '' >> /etc/letsencrypt/cli.ini
 echo 'server = https://acme-v02.api.letsencrypt.org/directory' >> /etc/letsencrypt/cli.ini
 certbot register --agree-tos --eff-email --email "${EMAIL}"
 
 certbot certonly --dns-route53 -d '*.devbox.dea.ga.gov.au'
-```
-
-Backing it up to S3 (encrypted):
-
-```
-eval $(ec2env P=ssm:///dev/devbox/key)
-F=letsencrypt-$(date -I).tgz.gpg
-(cd /etc && tar cz letsencrypt) | gpg --batch --passphrase "$P" --symmetric --output "/tmp/${F}"
-
-aws s3 cp "/tmp/${F}" "s3://dea-devbox-config/SSL/${F}"
-aws s3 cp "/tmp/${F}" "s3://dea-devbox-config/SSL/letsencrypt.tgz.gpg"
-```
-
-Copy certificates to S3:
-
-```
-eval $(ec2env P=ssm:///dev/devbox/key)
-(cd /etc/letsencrypt/live/ &&
-  tar cz --dereference .) | \
-  gpg --batch --passphrase "$P" --symmetric | \
-  aws s3 cp - s3://dea-devbox-config/SSL/certs.tgz.gpg
-```
-
-Restoring from S3:
-
-```
-eval $(ec2env P=ssm:///dev/devbox/key)
-aws s3 cp s3://dea-devbox-config/SSL/letsencrypt.tgz.gpg - | \
-  gpg --batch --passphrase "$P" --decrypt 2> /dev/null | \
-  (cd /etc && tar xzv)
 ```

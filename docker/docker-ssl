@@ -15,5 +15,7 @@ get_env () {
 eval $(python ./aws_creds.py)
 mkdir -p letsencrypt
 
-exec docker run --rm -it --entrypoint bash $(get_env) \
-     -v $(pwd)/letsencrypt:/etc/letsencrypt dea-ssl
+[[ "${DEBUG}" = 1 ]] && ee="--entrypoint bash" || ee=""
+
+exec docker run --rm -it $(get_env) $ee \
+     -v $(pwd)/letsencrypt:/etc/letsencrypt dea-ssl $@
