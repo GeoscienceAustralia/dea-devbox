@@ -54,7 +54,8 @@ def jhub_config(c,
                 data_dir='/var/lib/jupyterhub',
                 admin_access=True,
                 port=8080,
-                ip='127.0.0.1'):
+                ip='127.0.0.1',
+                lab=True):
     params = [os.environ.get(n) for n in ['OAUTH_CLIENT_ID',
                                           'OAUTH_CLIENT_SECRET',
                                           'OAUTH_CALLBACK_URL',
@@ -84,6 +85,10 @@ def jhub_config(c,
 
     # Spawner: create system users on the fly
     c.Spawner.pre_spawn_hook = pre_spawn_hook
+
+    if lab:
+        c.Spawner.default_url = '/lab'
+        c.Spawner.cmd = ['jupyter-labhub']
 
     # Authenticate users with GitHub OAuth
     c.JupyterHub.authenticator_class = 'oauthenticator.GitHubOAuthenticator'

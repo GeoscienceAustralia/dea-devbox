@@ -19,6 +19,8 @@ npm cache clean --force
 install -D -d -m 755 /var/lib/jupyterhub/
 pip3 install --no-cache \
      jupyterhub \
+     jupyterlab \
+     jupyterlab-git \
      oauthenticator \
      dockerspawner
 
