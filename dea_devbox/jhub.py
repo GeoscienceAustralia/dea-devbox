@@ -101,3 +101,5 @@ def jhub_config(c,
     c.Authenticator.blacklist = {'ubuntu', 'root'}
     c.Authenticator.admin_users = {admin_user}
     c.JupyterHub.admin_access = admin_access
+
+    return c
