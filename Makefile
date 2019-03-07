@@ -1,4 +1,4 @@
-v := 0.1.3
+v := 0.1.4
 deb_file := "dea-devbox-$(v).deb"
 
 all: $(deb_file)
