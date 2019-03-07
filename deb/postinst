@@ -18,10 +18,11 @@ npm install -g configurable-http-proxy
 npm cache clean --force
 install -D -d -m 755 /var/lib/jupyterhub/
 pip3 install --no-cache \
-     jupyterhub \
+     tornado==5.1.1 \
+     jupyterhub==0.9.4 \
+     oauthenticator==0.8.1 \
      jupyterlab \
      jupyterlab-git \
-     oauthenticator \
      dockerspawner
 
 pip3 install --no-cache notebook
