@@ -1,6 +1,7 @@
 [Unit]
 Description=Early cleanup, remove dangling symlinks
 After=local-fs.target
+Before=network.target
 
 [Service]
 Type=oneshot
